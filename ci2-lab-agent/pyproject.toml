@@ -1,0 +1,9 @@
+[project]
+name = "ci2-lab-agent"
+version = "0.1.0"
+description = "CI2 Lab repository analysis agent"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
