@@ -1,0 +1,42 @@
+ai_ml:
+  - fine_tuning
+  - training
+  - inference
+  - evaluation
+  - embeddings
+  - rag
+  - computer_vision
+  - nlp
+  - time_series
+  - model_serving
+
+data:
+  - data_ingestion
+  - preprocessing
+  - cleaning
+  - transformation
+  - visualization
+  - reporting
+
+hpc:
+  - slurm_execution
+  - mpi
+  - openmp
+  - cuda
+  - distributed_training
+  - batch_processing
+
+software:
+  - api_backend
+  - frontend
+  - cli_tool
+  - automation
+  - testing
+  - packaging
+
+scientific:
+  - simulation
+  - optimization
+  - numerical_methods
+  - signal_processing
+  - image_analysis
