@@ -1,6 +1,12 @@
 # Inventario de Capacidades y Herramientas
 
-Implementacion inicial de la Fase 1 descrita en `AGENTES_INVENTARIO_CAPACIDADES.md`.
+Implementacion inicial de la Fase 1 descrita en `AGENTES_INVENTARIO_CAPACIDADES.md` y alineada con la arquitectura resumida de `READ.md`.
+
+## Documentacion del repo
+
+- `AGENTES_INVENTARIO_CAPACIDADES.md`: especificacion funcional detallada y documento canonico.
+- `READ.md`: arquitectura unificada y reparto de responsabilidades entre agentes.
+- `README.md`: estado actual de la implementacion y forma de uso.
 
 ## Que hace ahora
 

@@ -1,35 +1,29 @@
-# Arquitectura de Subagentes — CI2 Lab
+# Arquitectura Unificada de Subagentes — CI2 Lab
 
-## Objetivo del sistema
+Este documento resume la arquitectura operativa del sistema y queda alineado con la especificacion detallada de [AGENTES_INVENTARIO_CAPACIDADES.md](./AGENTES_INVENTARIO_CAPACIDADES.md).
 
-El objetivo de esta parte del proyecto **CI2 Lab** es construir un sistema basado en subagentes capaz de analizar repositorios de software de la Cátedra, extraer las herramientas utilizadas, documentarlas y generar un inventario técnico estructurado.
+## Objetivo comun
 
-El sistema debe funcionar de forma modular. Cada subagente tendrá una responsabilidad concreta y el **Agente Auditor** será el encargado de coordinar el flujo general, supervisar los resultados y comprobar que todos los subagentes funcionan correctamente.
+El sistema analiza proyectos locales, detecta herramientas reutilizables, las documenta, las clasifica por capacidades y construye un inventario que despues puede servir para recomendar o integrar herramientas en proyectos nuevos.
 
----
+Los dos documentos del repositorio ya no deben interpretarse como propuestas rivales:
 
-## Idea principal
+- `AGENTES_INVENTARIO_CAPACIDADES.md` define la especificacion funcional completa.
+- `READ.md` define una vista resumida de arquitectura y reparto de responsabilidades.
 
-El sistema no debe empezar como un agente complejo con muchas capacidades mezcladas.
+## Principio de diseno
 
-Debe organizarse como un conjunto de subagentes especializados:
+La arquitectura unificada sigue dos niveles:
 
-```text
-Agente Auditor
-    ├── Subagente Scanner
-    ├── Subagente Detector de Lenguajes
-    ├── Subagente Detector de Dependencias
-    ├── Subagente Detector de Herramientas
-    ├── Subagente Detector de Scripts
-    ├── Subagente Detector de Documentación
-    ├── Subagente Generador de Inventario
-    └── Subagente Generador de Informe
-```
+1. Un agente principal coordina el flujo de extremo a extremo.
+2. Varios agentes especializados ejecutan tareas concretas y devuelven resultados estructurados.
 
-El **Agente Auditor** actúa como controlador principal.
-Los demás subagentes realizan tareas específicas y devuelven resultados estructurados.
+El control de calidad no sustituye a la orquestacion. Por eso:
 
----
+- `ToolInventoryMainAgent` es el coordinador general.
+- `AuditorAgent` es el coordinador de la validacion y el control de calidad.
+
+Asi se resuelve el conflicto anterior entre ambos documentos.
 
 ## Arquitectura general
 
@@ -40,1121 +34,106 @@ Usuario
 CLI / Entrada del sistema
   |
   v
-Agente Auditor
+ToolInventoryMainAgent
   |
-  ├── Subagente Scanner
-  |
-  ├── Subagente Detector de Lenguajes
-  |
-  ├── Subagente Detector de Dependencias
-  |
-  ├── Subagente Detector de Herramientas
-  |
-  ├── Subagente Detector de Scripts
-  |
-  ├── Subagente Detector de Documentación
-  |
-  ├── Subagente Generador de Inventario
-  |
-  └── Subagente Generador de Informe
+  ├── ToolExtractionAgent
+  ├── DocumentationAgent
+  ├── DependencyAgent
+  ├── CapabilityClassifierAgent
+  ├── RecommendationAgent
+  ├── IntegrationAgent
+  └── AuditorAgent
   |
   v
 Salidas finales
   |
-  ├── inventory.json
-  └── report.md
+  ├── inventory/tools/<tool_id>/
+  ├── inventory/index/tools_index.json
+  ├── inventory/index/capabilities_index.json
+  ├── inventory/index/project_tool_map.json
+  └── inventory/audit/audit_report.md
 ```
 
----
+## Reparto de responsabilidades
 
-## Principio de diseño
+### `ToolInventoryMainAgent`
 
-El principio central del sistema es:
+Es el orquestador principal del sistema. Debe:
+
+- recibir proyectos o solicitudes de recomendacion;
+- pedir extraccion, documentacion, dependencias y clasificacion;
+- generar fichas `tool.yaml` y `README.md`;
+- actualizar indices globales;
+- solicitar auditoria antes de aceptar resultados;
+- pedir confirmacion explicita antes de integrar herramientas en proyectos nuevos.
+
+### `AuditorAgent`
+
+Es el control de calidad del sistema. Debe:
+
+- validar que cada herramienta tenga estructura minima;
+- comprobar que capacidades y dependencias tienen evidencia;
+- detectar duplicados, mezclas indebidas y datos sensibles;
+- emitir advertencias, rechazos o aceptacion con observaciones;
+- generar el informe de auditoria.
+
+El auditor supervisa y valida, pero no sustituye al agente principal como coordinador del flujo completo.
+
+## Mapa entre la arquitectura antigua y la actual
+
+La version anterior de `READ.md` describia subagentes mas atomicos. Esa idea sigue siendo valida, pero ahora se integra asi:
+
+| Arquitectura anterior | Arquitectura actual |
+|---|---|
+| Subagente Scanner | Parte interna de `ToolExtractionAgent` |
+| Detector de Lenguajes | Parte de `DependencyAgent` |
+| Detector de Dependencias | `DependencyAgent` |
+| Detector de Herramientas | `ToolExtractionAgent` |
+| Detector de Scripts | `ToolExtractionAgent` y `DependencyAgent` |
+| Detector de Documentacion | `DocumentationAgent` |
+| Generador de Inventario | `ToolInventoryMainAgent` |
+| Generador de Informe | `AuditorAgent` y `ToolInventoryMainAgent` |
+| Agente Auditor como coordinador total | `AuditorAgent` como coordinador de validacion |
+
+Esto permite conservar la modularidad original sin chocar con el modelo mas completo por capacidades.
+
+## Flujo comun del sistema
 
 ```text
-Cada subagente hace una sola cosa y la hace bien.
-El Agente Auditor coordina, valida y supervisa.
+1. El usuario aporta una carpeta de proyecto o describe un proyecto nuevo.
+2. ToolInventoryMainAgent registra la solicitud.
+3. ToolExtractionAgent detecta herramientas candidatas.
+4. DocumentationAgent extrae documentacion y evidencias.
+5. DependencyAgent detecta lenguajes, librerias y requisitos.
+6. CapabilityClassifierAgent asigna capacidades con evidencia.
+7. ToolInventoryMainAgent genera artefactos de inventario.
+8. AuditorAgent valida calidad, coherencia y seguridad.
+9. Si hay errores, ToolInventoryMainAgent corrige o marca revision.
+10. Si todo es valido, se actualiza el inventario.
+11. Si el usuario pide reutilizacion, RecommendationAgent propone herramientas.
+12. IntegrationAgent solo integra tras confirmacion explicita.
 ```
 
-Esto permite que el sistema sea:
+## Reglas que ya no deben entrar en conflicto
 
-* más fácil de entender;
-* más fácil de probar;
-* más fácil de ampliar;
-* más robusto ante errores;
-* más adecuado para integrarse después con Claude Code.
+- El sistema trabaja localmente y no depende de APIs externas en la primera fase.
+- No se borran archivos originales del proyecto analizado.
+- No se inventa informacion sin evidencia trazable.
+- El inventario se organiza por capacidades, no solo por repositorios.
+- La integracion en proyectos nuevos exige aceptacion explicita del usuario.
+- La auditoria es obligatoria antes de aceptar herramientas en el inventario.
 
----
+## Salidas esperadas
 
-# 1. Agente Auditor
+El repositorio debe converger hacia estas salidas:
 
-## Rol principal
+- `inventory/tools/<tool_id>/tool.yaml`
+- `inventory/tools/<tool_id>/README.md`
+- `inventory/index/tools_index.json`
+- `inventory/index/capabilities_index.json`
+- `inventory/index/project_tool_map.json`
+- `inventory/audit/audit_report.md`
 
-El **Agente Auditor** es el agente principal del sistema.
+## Estado de referencia
 
-Su función no es detectar directamente herramientas ni analizar todos los archivos por sí mismo. Su función es coordinar a los subagentes, recibir sus resultados, validarlos y comprobar que el análisis final sea coherente.
-
-El Agente Auditor es el responsable de decidir si el resultado final puede exportarse o si hay errores que deben corregirse.
-
----
-
-## Responsabilidades del Agente Auditor
-
-El Agente Auditor debe:
-
-1. Recibir la ruta del repositorio.
-2. Validar que la ruta existe.
-3. Lanzar el Subagente Scanner.
-4. Recibir la lista de archivos relevantes.
-5. Llamar a los subagentes especializados.
-6. Recoger los resultados de cada subagente.
-7. Comprobar que los resultados no se contradicen.
-8. Corregir errores simples y seguros.
-9. Generar advertencias cuando falte información.
-10. Validar que el inventario final tiene una estructura correcta.
-11. Llamar al Subagente Generador de Inventario.
-12. Llamar al Subagente Generador de Informe.
-13. Mostrar un resumen final al usuario.
-
----
-
-## Flujo del Agente Auditor
-
-```text
-1. Recibe la ruta del repositorio.
-2. Comprueba que existe.
-3. Llama al Subagente Scanner.
-4. Recibe los archivos encontrados.
-5. Llama al resto de subagentes.
-6. Recibe resultados parciales.
-7. Une todos los resultados.
-8. Audita la coherencia del resultado.
-9. Genera advertencias o errores.
-10. Si todo es válido, genera las salidas finales.
-```
-
----
-
-## Validaciones del Agente Auditor
-
-El Agente Auditor debe comprobar, como mínimo:
-
-### Validaciones generales
-
-* El nombre del proyecto existe.
-* La ruta del proyecto existe.
-* El inventario es serializable a JSON.
-* Las listas no tienen duplicados.
-* Las rutas son relativas cuando sea posible.
-* Los campos obligatorios no están vacíos.
-* Los resultados tienen tipos de datos correctos.
-
-### Validaciones de coherencia
-
-* Si existe `requirements.txt`, debe aparecer Python como lenguaje.
-* Si existe `package.json`, debe aparecer Node.js como tecnología.
-* Si existe `Dockerfile`, debe aparecer Docker como herramienta.
-* Si existe `README.md`, documentación debe marcar `has_readme = true`.
-* Si no existe `README.md`, documentación debe marcar `has_readme = false`.
-* Si hay scripts `.sh`, Bash debe aparecer como lenguaje o tecnología auxiliar.
-* Si hay `pyproject.toml`, debe detectarse un proyecto Python.
-* Si hay `environment.yml`, debe detectarse Conda.
-* Si hay `.ipynb`, debe detectarse Jupyter Notebook.
-
----
-
-## Errores y advertencias
-
-El Agente Auditor debe distinguir entre **errores** y **advertencias**.
-
-### Errores
-
-Un error impide generar una salida fiable.
-
-Ejemplos:
-
-```text
-La ruta del repositorio no existe.
-El inventario no se puede serializar a JSON.
-Falta el nombre del proyecto.
-El campo dependencies tiene un formato incorrecto.
-El campo tools tiene un formato incorrecto.
-```
-
-### Advertencias
-
-Una advertencia no impide generar la salida, pero indica que algo puede mejorarse o revisarse.
-
-Ejemplos:
-
-```text
-README.md encontrado, pero no contiene sección de instalación.
-requirements.txt encontrado, pero no se han extraído dependencias.
-Dockerfile encontrado, pero no se ha detectado imagen base.
-package.json encontrado, pero no contiene scripts.
-Hay scripts de ejecución, pero no están documentados en el README.
-```
-
----
-
-## Salida del Agente Auditor
-
-El Agente Auditor debe producir una estructura como esta:
-
-```json
-{
-  "is_valid": true,
-  "errors": [],
-  "warnings": [
-    "README.md encontrado, pero no contiene sección de instalación.",
-    "Dockerfile encontrado, pero no se ha detectado sección Docker en la documentación."
-  ],
-  "fixed_fields": [
-    "languages",
-    "tools"
-  ]
-}
-```
-
----
-
-# 2. Subagente Scanner
-
-## Rol principal
-
-El **Subagente Scanner** se encarga de recorrer el repositorio y encontrar archivos relevantes.
-
-No debe analizar el significado de los archivos. Solo debe localizar, clasificar y devolver rutas.
-
----
-
-## Responsabilidades
-
-El Subagente Scanner debe:
-
-* recorrer la carpeta del proyecto;
-* ignorar carpetas innecesarias;
-* detectar archivos relevantes;
-* clasificar archivos por tipo;
-* devolver rutas relativas;
-* no ejecutar ningún archivo.
-
----
-
-## Carpetas ignoradas
-
-Debe ignorar:
-
-```text
-.git/
-.venv/
-venv/
-__pycache__/
-node_modules/
-dist/
-build/
-.cache/
-.ipynb_checkpoints/
-.idea/
-.vscode/
-```
-
----
-
-## Archivos relevantes
-
-Debe buscar:
-
-```text
-requirements.txt
-pyproject.toml
-setup.py
-setup.cfg
-environment.yml
-Pipfile
-poetry.lock
-package.json
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
-Dockerfile
-docker-compose.yml
-docker-compose.yaml
-Makefile
-README.md
-README.rst
-docs/
-*.sh
-*.py
-*.ipynb
-*.yml
-*.yaml
-```
-
----
-
-## Salida esperada
-
-```json
-{
-  "project_path": "./repo_prueba",
-  "project_name": "repo_prueba",
-  "files": {
-    "python": ["main.py", "src/utils.py"],
-    "dependencies": ["requirements.txt", "pyproject.toml"],
-    "node": ["package.json"],
-    "docker": ["Dockerfile", "docker-compose.yml"],
-    "scripts": ["run.sh", "install.sh"],
-    "documentation": ["README.md", "docs/index.md"],
-    "config": [".github/workflows/test.yml"]
-  }
-}
-```
-
----
-
-# 3. Subagente Detector de Lenguajes
-
-## Rol principal
-
-El **Subagente Detector de Lenguajes** identifica los lenguajes de programación utilizados en el repositorio.
-
----
-
-## Responsabilidades
-
-Debe detectar lenguajes a partir de extensiones y archivos característicos.
-
-Ejemplos:
-
-```text
-.py       -> Python
-.ipynb    -> Jupyter Notebook
-.js       -> JavaScript
-.ts       -> TypeScript
-.sh       -> Bash
-.java     -> Java
-.cpp      -> C++
-.c        -> C
-.R        -> R
-```
-
----
-
-## Salida esperada
-
-```json
-{
-  "languages": [
-    "Python",
-    "Bash",
-    "Jupyter Notebook"
-  ]
-}
-```
-
----
-
-# 4. Subagente Detector de Dependencias
-
-## Rol principal
-
-El **Subagente Detector de Dependencias** extrae dependencias y gestores de paquetes.
-
----
-
-## Archivos que analiza
-
-```text
-requirements.txt
-pyproject.toml
-setup.py
-setup.cfg
-environment.yml
-Pipfile
-package.json
-```
-
----
-
-## Responsabilidades
-
-Debe detectar:
-
-* dependencias de Python;
-* dependencias de Node.js;
-* dependencias de sistema cuando sea posible;
-* gestores de paquetes;
-* versiones si aparecen explícitamente.
-
----
-
-## Gestores de paquetes detectables
-
-```text
-pip
-conda
-poetry
-setuptools
-npm
-yarn
-pnpm
-```
-
----
-
-## Salida esperada
-
-```json
-{
-  "package_managers": ["pip", "conda"],
-  "dependencies": {
-    "python": ["numpy", "pandas", "scikit-learn"],
-    "node": [],
-    "system": []
-  }
-}
-```
-
----
-
-# 5. Subagente Detector de Herramientas
-
-## Rol principal
-
-El **Subagente Detector de Herramientas** identifica herramientas software, frameworks y utilidades de desarrollo.
-
----
-
-## Herramientas iniciales
-
-Debe detectar, como mínimo:
-
-```text
-Docker
-Docker Compose
-pytest
-ruff
-black
-mypy
-Jupyter
-FastAPI
-Flask
-Django
-React
-Vue
-Angular
-Vite
-Express
-GitHub Actions
-GitLab CI
-Make
-```
-
----
-
-## Archivos que analiza
-
-```text
-Dockerfile
-docker-compose.yml
-docker-compose.yaml
-pyproject.toml
-requirements.txt
-package.json
-Makefile
-.github/workflows/*
-.gitlab-ci.yml
-```
-
----
-
-## Salida esperada
-
-```json
-{
-  "tools": [
-    "Docker",
-    "pytest",
-    "ruff",
-    "Jupyter"
-  ],
-  "frameworks": [
-    "FastAPI"
-  ],
-  "ci_tools": [
-    "GitHub Actions"
-  ]
-}
-```
-
----
-
-# 6. Subagente Detector de Scripts
-
-## Rol principal
-
-El **Subagente Detector de Scripts** identifica scripts de ejecución, instalación, pruebas o automatización.
-
----
-
-## Archivos que analiza
-
-```text
-*.sh
-Makefile
-package.json
-pyproject.toml
-```
-
----
-
-## Responsabilidades
-
-Debe detectar comandos como:
-
-```text
-python main.py
-python train.py
-pytest
-make run
-make test
-docker build
-docker compose up
-npm run dev
-npm test
-```
-
----
-
-## Clasificación de scripts
-
-Los scripts pueden clasificarse como:
-
-```text
-installation
-execution
-testing
-build
-deployment
-utility
-unknown
-```
-
----
-
-## Salida esperada
-
-```json
-{
-  "scripts": [
-    {
-      "path": "run.sh",
-      "type": "execution",
-      "commands": ["python main.py"]
-    },
-    {
-      "path": "Makefile",
-      "type": "testing",
-      "commands": ["pytest"]
-    }
-  ]
-}
-```
-
----
-
-# 7. Subagente Detector de Documentación
-
-## Rol principal
-
-El **Subagente Detector de Documentación** comprueba la documentación existente.
-
-No debe inventar documentación. Solo debe analizar lo que existe.
-
----
-
-## Archivos que analiza
-
-```text
-README.md
-README.rst
-docs/
-INSTALL.md
-CONTRIBUTING.md
-CHANGELOG.md
-```
-
----
-
-## Responsabilidades
-
-Debe detectar:
-
-* si existe README;
-* si existe carpeta `docs/`;
-* si hay sección de instalación;
-* si hay sección de uso;
-* si hay sección de ejemplos;
-* si hay sección de tests;
-* si hay sección de Docker;
-* si hay sección de arquitectura;
-* si hay sección de dependencias;
-* qué secciones faltan.
-
----
-
-## Secciones buscadas
-
-```text
-Installation
-Instalación
-Usage
-Uso
-Requirements
-Requisitos
-Dependencies
-Dependencias
-Examples
-Ejemplos
-Execution
-Ejecución
-Tests
-Pruebas
-Docker
-Architecture
-Arquitectura
-```
-
----
-
-## Salida esperada
-
-```json
-{
-  "documentation": {
-    "has_readme": true,
-    "has_docs_folder": false,
-    "has_installation_section": true,
-    "has_usage_section": true,
-    "has_examples_section": false,
-    "has_tests_section": false,
-    "has_docker_section": false,
-    "has_architecture_section": false,
-    "missing_sections": [
-      "examples",
-      "tests",
-      "docker"
-    ]
-  }
-}
-```
-
----
-
-# 8. Subagente Generador de Inventario
-
-## Rol principal
-
-El **Subagente Generador de Inventario** construye el archivo estructurado final `inventory.json`.
-
-No analiza archivos directamente. Solo recibe los resultados validados por el Agente Auditor y los transforma en JSON.
-
----
-
-## Responsabilidades
-
-Debe:
-
-* crear una estructura JSON clara;
-* incluir los resultados de todos los subagentes;
-* ordenar listas;
-* eliminar duplicados;
-* incluir advertencias del Agente Auditor;
-* guardar el archivo en `outputs/inventory.json`.
-
----
-
-## Formato esperado
-
-```json
-{
-  "project_name": "repo_prueba",
-  "project_path": "./repo_prueba",
-  "languages": ["Python", "Bash"],
-  "package_managers": ["pip"],
-  "dependencies": {
-    "python": ["numpy", "pandas"],
-    "node": [],
-    "system": []
-  },
-  "tools": ["Docker", "pytest"],
-  "frameworks": [],
-  "scripts": [
-    {
-      "path": "run.sh",
-      "type": "execution",
-      "commands": ["python main.py"]
-    }
-  ],
-  "documentation": {
-    "has_readme": true,
-    "has_installation_section": false,
-    "has_usage_section": true
-  },
-  "audit": {
-    "is_valid": true,
-    "errors": [],
-    "warnings": []
-  }
-}
-```
-
----
-
-# 9. Subagente Generador de Informe
-
-## Rol principal
-
-El **Subagente Generador de Informe** genera un informe legible en Markdown.
-
-No debe modificar el inventario. Solo debe convertirlo en un documento fácil de leer.
-
----
-
-## Responsabilidades
-
-Debe generar:
-
-```text
-outputs/report.md
-```
-
-El informe debe incluir:
-
-* resumen del proyecto;
-* lenguajes detectados;
-* dependencias detectadas;
-* herramientas detectadas;
-* scripts relevantes;
-* estado de la documentación;
-* advertencias del Agente Auditor;
-* recomendaciones básicas.
-
----
-
-## Estructura esperada del informe
-
-```markdown
-# Informe de inventario: repo_prueba
-
-## Resumen
-
-El proyecto analizado utiliza Python y Bash. Se han detectado dependencias gestionadas mediante pip y varios scripts de ejecución.
-
-## Lenguajes detectados
-
-- Python
-- Bash
-
-## Dependencias
-
-### Python
-
-- numpy
-- pandas
-
-## Herramientas detectadas
-
-- Docker
-- pytest
-
-## Scripts detectados
-
-- run.sh: script de ejecución
-
-## Estado de la documentación
-
-- README encontrado.
-- Sección de instalación no encontrada.
-- Sección de uso encontrada.
-
-## Auditoría
-
-### Advertencias
-
-- README.md encontrado, pero no contiene sección de instalación.
-
-## Recomendaciones
-
-- Añadir instrucciones de instalación.
-- Documentar cómo ejecutar el proyecto.
-```
-
----
-
-# Flujo completo del sistema
-
-```text
-1. El usuario ejecuta el análisis sobre un repositorio.
-
-2. El Agente Auditor recibe la ruta.
-
-3. El Agente Auditor valida la ruta.
-
-4. El Agente Auditor llama al Subagente Scanner.
-
-5. El Scanner devuelve los archivos relevantes.
-
-6. El Agente Auditor llama a los subagentes especializados:
-   - Detector de Lenguajes
-   - Detector de Dependencias
-   - Detector de Herramientas
-   - Detector de Scripts
-   - Detector de Documentación
-
-7. Cada subagente devuelve su resultado parcial.
-
-8. El Agente Auditor une los resultados.
-
-9. El Agente Auditor valida la coherencia global.
-
-10. Si hay errores graves, detiene la exportación.
-
-11. Si solo hay advertencias, continúa.
-
-12. El Agente Auditor llama al Generador de Inventario.
-
-13. El Agente Auditor llama al Generador de Informe.
-
-14. Se generan las salidas finales.
-```
-
----
-
-# Estructura recomendada del código
-
-```text
-ci2-lab-agent/
-│
-├── README.md
-├── CLAUDE.md
-├── pyproject.toml
-├── requirements.txt
-├── .gitignore
-│
-├── src/
-│   └── ci2_lab/
-│       ├── __init__.py
-│       ├── main.py
-│       ├── models.py
-│       ├── utils.py
-│       │
-│       ├── agents/
-│       │   ├── __init__.py
-│       │   ├── auditor_agent.py
-│       │   ├── scanner_agent.py
-│       │   ├── language_agent.py
-│       │   ├── dependency_agent.py
-│       │   ├── tools_agent.py
-│       │   ├── scripts_agent.py
-│       │   ├── documentation_agent.py
-│       │   ├── inventory_agent.py
-│       │   └── report_agent.py
-│       │
-│       └── detectors/
-│           ├── __init__.py
-│           ├── python_detector.py
-│           ├── node_detector.py
-│           ├── docker_detector.py
-│           ├── script_detector.py
-│           └── docs_detector.py
-│
-├── outputs/
-│   ├── inventory.json
-│   └── report.md
-│
-├── examples/
-│   └── repo_prueba/
-│
-└── tests/
-    ├── test_auditor_agent.py
-    ├── test_scanner_agent.py
-    ├── test_language_agent.py
-    ├── test_dependency_agent.py
-    ├── test_tools_agent.py
-    ├── test_scripts_agent.py
-    └── test_documentation_agent.py
-```
-
----
-
-# Diferencia entre agentes y detectores
-
-Es importante mantener esta separación:
-
-```text
-agents/    -> coordinan tareas y devuelven resultados de alto nivel.
-detectors/ -> contienen reglas concretas para detectar patrones.
-```
-
-Ejemplo:
-
-```text
-dependency_agent.py
-    usa:
-        python_detector.py
-        node_detector.py
-
-tools_agent.py
-    usa:
-        docker_detector.py
-        docs_detector.py
-
-documentation_agent.py
-    usa:
-        docs_detector.py
-```
-
-Los agentes organizan el trabajo.
-Los detectores hacen búsquedas concretas.
-
----
-
-# Modelos de datos recomendados
-
-## Resultado del Scanner
-
-```python
-from dataclasses import dataclass, field
-
-
-@dataclass
-class ScanResult:
-    project_name: str
-    project_path: str
-    files: dict[str, list[str]] = field(default_factory=dict)
-```
-
----
-
-## Resultado de Auditoría
-
-```python
-from dataclasses import dataclass, field
-
-
-@dataclass
-class AuditResult:
-    is_valid: bool
-    errors: list[str] = field(default_factory=list)
-    warnings: list[str] = field(default_factory=list)
-    fixed_fields: list[str] = field(default_factory=list)
-```
-
----
-
-## Inventario del proyecto
-
-```python
-from dataclasses import dataclass, field
-
-
-@dataclass
-class ProjectInventory:
-    project_name: str
-    project_path: str
-    languages: list[str] = field(default_factory=list)
-    package_managers: list[str] = field(default_factory=list)
-    dependencies: dict[str, list[str]] = field(default_factory=dict)
-    tools: list[str] = field(default_factory=list)
-    frameworks: list[str] = field(default_factory=list)
-    scripts: list[dict] = field(default_factory=list)
-    documentation: dict = field(default_factory=dict)
-    audit: dict = field(default_factory=dict)
-```
-
----
-
-# Comando esperado
-
-El comando principal debería ser:
-
-```bash
-python -m ci2_lab.main scan ./examples/repo_prueba
-```
-
-Más adelante, si se configura como CLI instalable:
-
-```bash
-ci2-lab scan ./examples/repo_prueba
-```
-
----
-
-# Ejemplo de ejecución esperada
-
-```text
-Analizando proyecto: repo_prueba
-
-[1/8] Scanner ejecutado correctamente.
-[2/8] Lenguajes detectados.
-[3/8] Dependencias detectadas.
-[4/8] Herramientas detectadas.
-[5/8] Scripts detectados.
-[6/8] Documentación analizada.
-[7/8] Auditoría completada.
-[8/8] Informes generados.
-
-Resultado:
-- outputs/inventory.json
-- outputs/report.md
-
-Advertencias:
-- README.md encontrado, pero no contiene sección de instalación.
-```
-
----
-
-# Reglas importantes
-
-## Seguridad
-
-El sistema nunca debe ejecutar código del repositorio analizado.
-
-No debe ejecutar:
-
-```bash
-python script.py
-bash run.sh
-make run
-docker build .
-npm install
-pip install
-```
-
-Solo debe leer archivos.
-
----
-
-## Simplicidad
-
-No añadir todavía:
-
-```text
-RAG
-base de datos vectorial
-interfaz web
-multiagentes complejos
-ejecución real en clúster
-automatización HPC
-```
-
-La primera versión debe centrarse en:
-
-```text
-leer archivos
-detectar tecnologías
-generar inventario
-generar informe
-auditar coherencia
-```
-
----
-
-## Determinismo
-
-Para que los resultados sean comparables entre ejecuciones:
-
-* ordenar listas;
-* eliminar duplicados;
-* usar rutas relativas;
-* evitar inferencias débiles;
-* no inventar dependencias;
-* no inventar herramientas;
-* no inventar documentación.
-
----
-
-# Prioridad de desarrollo
-
-El orden recomendado es:
-
-```text
-1. Crear estructura del repositorio.
-2. Implementar modelos de datos.
-3. Implementar Subagente Scanner.
-4. Implementar Agente Auditor básico.
-5. Implementar Detector de Lenguajes.
-6. Implementar Detector de Dependencias.
-7. Implementar Detector de Herramientas.
-8. Implementar Detector de Scripts.
-9. Implementar Detector de Documentación.
-10. Implementar Generador de Inventario.
-11. Implementar Generador de Informe.
-12. Añadir tests.
-```
-
----
-
-# Primera versión mínima
-
-La primera versión mínima debe poder:
-
-1. Recibir una ruta de repositorio.
-2. Escanear archivos relevantes.
-3. Detectar Python si existe `requirements.txt` o archivos `.py`.
-4. Detectar Node.js si existe `package.json`.
-5. Detectar Docker si existe `Dockerfile`.
-6. Detectar README.
-7. Generar `inventory.json`.
-8. Generar `report.md`.
-9. Incluir auditoría con errores y advertencias.
-10. No ejecutar ningún archivo del proyecto analizado.
-
----
-
-# Criterios de éxito
-
-La arquitectura se considera correcta si:
-
-* el Agente Auditor coordina todo el flujo;
-* cada subagente tiene una responsabilidad única;
-* los subagentes devuelven datos estructurados;
-* el sistema genera un inventario legible;
-* el sistema genera un informe en Markdown;
-* la auditoría detecta incoherencias;
-* ningún componente ejecuta código del repositorio analizado;
-* añadir un nuevo subagente no obliga a reescribir todo el sistema.
-
----
-
-# Resumen final
-
-El sistema CI2 Lab debe construirse como una arquitectura modular de subagentes.
-
-El **Agente Auditor** será el núcleo del sistema:
-
-```text
-Coordina
-Valida
-Supervisa
-Corrige incoherencias simples
-Genera advertencias
-Autoriza la exportación final
-```
-
-Los subagentes se encargan de tareas concretas:
-
-```text
-Scanner
-Lenguajes
-Dependencias
-Herramientas
-Scripts
-Documentación
-Inventario
-Informe
-```
-
-Esta estructura permite empezar con una versión simple, clara y mantenible, y evolucionar más adelante hacia un sistema más inteligente integrado con Claude Code.
+Para detalles de formato, taxonomia, indices, flujos y fases de implementacion, el documento canonico es `AGENTES_INVENTARIO_CAPACIDADES.md`.
