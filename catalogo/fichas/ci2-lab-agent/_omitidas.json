@@ -1,0 +1,32 @@
+[
+  {
+    "nombre": "__init__",
+    "razon": "método especial (__init__)",
+    "fichero": "src/ci2_lab/agents/auditor_agent.py"
+  },
+  {
+    "nombre": "_detect_languages",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/auditor_agent.py"
+  },
+  {
+    "nombre": "_detect_tools",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/auditor_agent.py"
+  },
+  {
+    "nombre": "_detect_package_managers",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/auditor_agent.py"
+  },
+  {
+    "nombre": "_walk",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/scanner_agent.py"
+  },
+  {
+    "nombre": "_classify",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/scanner_agent.py"
+  }
+]

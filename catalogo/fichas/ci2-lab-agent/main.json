@@ -1,0 +1,12 @@
+{
+  "nombre": "main",
+  "proyecto": "ci2-lab-agent",
+  "que_hace": "por confirmar",
+  "donde_vive": "scripts/inventory_phase1.py :: main",
+  "stack": "Python >=3.10, shutil",
+  "entrada_salida": "Entrada: (—) → int",
+  "mantiene": "Ricardo-icai",
+  "etiquetas": [
+    "main"
+  ]
+}

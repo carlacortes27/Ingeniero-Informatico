@@ -1,0 +1,13 @@
+{
+  "nombre": "detect_candidate",
+  "proyecto": "ci2-lab-agent",
+  "que_hace": "por confirmar",
+  "donde_vive": "scripts/inventory_phase1.py :: detect_candidate",
+  "stack": "Python >=3.10, shutil",
+  "entrada_salida": "Entrada: (project_dir: Path) → ToolCandidate | None",
+  "mantiene": "Ricardo-icai",
+  "etiquetas": [
+    "detect",
+    "candidate"
+  ]
+}

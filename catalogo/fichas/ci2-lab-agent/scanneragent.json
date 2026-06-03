@@ -1,0 +1,13 @@
+{
+  "nombre": "ScannerAgent",
+  "proyecto": "ci2-lab-agent",
+  "que_hace": "por confirmar",
+  "donde_vive": "src/ci2_lab/agents/scanner_agent.py :: class ScannerAgent",
+  "stack": "Python >=3.10",
+  "entrada_salida": "Clase. Métodos públicos: scan",
+  "mantiene": "carlacortes27",
+  "etiquetas": [
+    "scanner",
+    "agent"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "nombre": "AuditResult",
+  "proyecto": "ci2-lab-agent",
+  "que_hace": "por confirmar",
+  "donde_vive": "src/ci2_lab/models.py :: class AuditResult",
+  "stack": "Python >=3.10",
+  "entrada_salida": "Clase (dataclass)",
+  "mantiene": "carlacortes27",
+  "etiquetas": [
+    "audit",
+    "result"
+  ]
+}

@@ -1,0 +1,344 @@
+{
+  "generado": "2026-06-03T08:25:15.703289+00:00",
+  "total": 24,
+  "por_proyecto": {
+    "ci2-lab-agent": 24
+  },
+  "fichas": [
+    {
+      "nombre": "AuditorAgent",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "por confirmar",
+      "donde_vive": "src/ci2_lab/agents/auditor_agent.py :: class AuditorAgent",
+      "stack": "Python >=3.10",
+      "entrada_salida": "Clase. Métodos públicos: scan, print_summary",
+      "mantiene": "carlacortes27",
+      "etiquetas": [
+        "auditor",
+        "agent"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/auditoragent.json"
+    },
+    {
+      "nombre": "AuditorAgent.print_summary",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "por confirmar",
+      "donde_vive": "src/ci2_lab/agents/auditor_agent.py :: AuditorAgent.print_summary",
+      "stack": "Python >=3.10",
+      "entrada_salida": "Entrada: (inventory: ProjectInventory, files: dict[str, list[str]] | None = None) → None",
+      "mantiene": "carlacortes27",
+      "etiquetas": [
+        "print",
+        "summary"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/auditoragent_print_summary.json"
+    },
+    {
+      "nombre": "AuditorAgent.scan",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "por confirmar",
+      "donde_vive": "src/ci2_lab/agents/auditor_agent.py :: AuditorAgent.scan",
+      "stack": "Python >=3.10",
+      "entrada_salida": "Entrada: (project_path: str | Path) → ProjectInventory",
+      "mantiene": "carlacortes27",
+      "etiquetas": [
+        "scan"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/auditoragent_scan.json"
+    },
+    {
+      "nombre": "AuditResult",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "por confirmar",
+      "donde_vive": "src/ci2_lab/models.py :: class AuditResult",
+      "stack": "Python >=3.10",
+      "entrada_salida": "Clase (dataclass)",
+      "mantiene": "carlacortes27",
+      "etiquetas": [
+        "audit",
+        "result"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/auditresult.json"
+    },
+    {
+      "nombre": "build_parser",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "por confirmar",
+      "donde_vive": "src/ci2_lab/main.py :: build_parser",
+      "stack": "Python >=3.10",
+      "entrada_salida": "Entrada: (—) → argparse.ArgumentParser",
+      "mantiene": "carlacortes27",
+      "etiquetas": [
+        "build",
+        "parser"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/build_parser.json"
+    },
+    {
+      "nombre": "collect_signals",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "por confirmar",
+      "donde_vive": "scripts/inventory_phase1.py :: collect_signals",
+      "stack": "Python >=3.10, shutil",
+      "entrada_salida": "Entrada: (project_dir: Path) → tuple[list[str], list[str]]",
+      "mantiene": "Ricardo-icai",
+      "etiquetas": [
+        "collect",
+        "signals"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/collect_signals.json"
+    },
+    {
+      "nombre": "detect_candidate",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "por confirmar",
+      "donde_vive": "scripts/inventory_phase1.py :: detect_candidate",
+      "stack": "Python >=3.10, shutil",
+      "entrada_salida": "Entrada: (project_dir: Path) → ToolCandidate | None",
+      "mantiene": "Ricardo-icai",
+      "etiquetas": [
+        "detect",
+        "candidate"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/detect_candidate.json"
+    },
+    {
+      "nombre": "detect_projects",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "por confirmar",
+      "donde_vive": "scripts/inventory_phase1.py :: detect_projects",
+      "stack": "Python >=3.10, shutil",
+      "entrada_salida": "Entrada: (project_arg: str | None) → list[Path]",
+      "mantiene": "Ricardo-icai",
+      "etiquetas": [
+        "detect",
+        "projects"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/detect_projects.json"
+    },
+    {
+      "nombre": "ensure_structure",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "por confirmar",
+      "donde_vive": "scripts/inventory_phase1.py :: ensure_structure",
+      "stack": "Python >=3.10, shutil",
+      "entrada_salida": "Entrada: (—) → None",
+      "mantiene": "Ricardo-icai",
+      "etiquetas": [
+        "ensure",
+        "structure"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/ensure_structure.json"
+    },
+    {
+      "nombre": "infer_name",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "por confirmar",
+      "donde_vive": "scripts/inventory_phase1.py :: infer_name",
+      "stack": "Python >=3.10, shutil",
+      "entrada_salida": "Entrada: (project_dir: Path, source_paths: list[str]) → str",
+      "mantiene": "Ricardo-icai",
+      "etiquetas": [
+        "infer",
+        "name"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/infer_name.json"
+    },
+    {
+      "nombre": "iter_project_files",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "por confirmar",
+      "donde_vive": "scripts/inventory_phase1.py :: iter_project_files",
+      "stack": "Python >=3.10, shutil",
+      "entrada_salida": "Entrada: (project_dir: Path) → Iterable[Path]",
+      "mantiene": "Ricardo-icai",
+      "etiquetas": [
+        "iter",
+        "project",
+        "files"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/iter_project_files.json"
+    },
+    {
+      "nombre": "main",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "por confirmar",
+      "donde_vive": "scripts/inventory_phase1.py :: main",
+      "stack": "Python >=3.10, shutil",
+      "entrada_salida": "Entrada: (—) → int",
+      "mantiene": "Ricardo-icai",
+      "etiquetas": [
+        "main"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/main.json"
+    },
+    {
+      "nombre": "main",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "por confirmar",
+      "donde_vive": "src/ci2_lab/main.py :: main",
+      "stack": "Python >=3.10",
+      "entrada_salida": "Entrada: (—) → int",
+      "mantiene": "carlacortes27",
+      "etiquetas": [
+        "main"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/main_1.json"
+    },
+    {
+      "nombre": "now_iso",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "por confirmar",
+      "donde_vive": "scripts/inventory_phase1.py :: now_iso",
+      "stack": "Python >=3.10, shutil",
+      "entrada_salida": "Entrada: (—) → str",
+      "mantiene": "Ricardo-icai",
+      "etiquetas": [
+        "now",
+        "iso"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/now_iso.json"
+    },
+    {
+      "nombre": "ProjectInventory",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "por confirmar",
+      "donde_vive": "src/ci2_lab/models.py :: class ProjectInventory",
+      "stack": "Python >=3.10",
+      "entrada_salida": "Clase (dataclass)",
+      "mantiene": "carlacortes27",
+      "etiquetas": [
+        "project",
+        "inventory"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/projectinventory.json"
+    },
+    {
+      "nombre": "render_tool_readme",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "por confirmar",
+      "donde_vive": "scripts/inventory_phase1.py :: render_tool_readme",
+      "stack": "Python >=3.10, shutil",
+      "entrada_salida": "Entrada: (candidate: ToolCandidate) → str",
+      "mantiene": "Ricardo-icai",
+      "etiquetas": [
+        "render",
+        "tool",
+        "readme"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/render_tool_readme.json"
+    },
+    {
+      "nombre": "render_tool_yaml",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "por confirmar",
+      "donde_vive": "scripts/inventory_phase1.py :: render_tool_yaml",
+      "stack": "Python >=3.10, shutil",
+      "entrada_salida": "Entrada: (candidate: ToolCandidate) → str",
+      "mantiene": "Ricardo-icai",
+      "etiquetas": [
+        "render",
+        "tool",
+        "yaml"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/render_tool_yaml.json"
+    },
+    {
+      "nombre": "ScannerAgent",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "por confirmar",
+      "donde_vive": "src/ci2_lab/agents/scanner_agent.py :: class ScannerAgent",
+      "stack": "Python >=3.10",
+      "entrada_salida": "Clase. Métodos públicos: scan",
+      "mantiene": "carlacortes27",
+      "etiquetas": [
+        "scanner",
+        "agent"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/scanneragent.json"
+    },
+    {
+      "nombre": "ScannerAgent.scan",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "por confirmar",
+      "donde_vive": "src/ci2_lab/agents/scanner_agent.py :: ScannerAgent.scan",
+      "stack": "Python >=3.10",
+      "entrada_salida": "Entrada: (project_path: str | Path) → ScanResult",
+      "mantiene": "carlacortes27",
+      "etiquetas": [
+        "scan"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/scanneragent_scan.json"
+    },
+    {
+      "nombre": "ScanResult",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "por confirmar",
+      "donde_vive": "src/ci2_lab/models.py :: class ScanResult",
+      "stack": "Python >=3.10",
+      "entrada_salida": "Clase (dataclass)",
+      "mantiene": "carlacortes27",
+      "etiquetas": [
+        "scan",
+        "result"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/scanresult.json"
+    },
+    {
+      "nombre": "slugify",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "por confirmar",
+      "donde_vive": "scripts/inventory_phase1.py :: slugify",
+      "stack": "Python >=3.10, shutil",
+      "entrada_salida": "Entrada: (value: str) → str",
+      "mantiene": "Ricardo-icai",
+      "etiquetas": [
+        "slugify"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/slugify.json"
+    },
+    {
+      "nombre": "ToolCandidate",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "por confirmar",
+      "donde_vive": "scripts/inventory_phase1.py :: class ToolCandidate",
+      "stack": "Python >=3.10, shutil",
+      "entrada_salida": "Clase (dataclass)",
+      "mantiene": "Ricardo-icai",
+      "etiquetas": [
+        "tool",
+        "candidate"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/toolcandidate.json"
+    },
+    {
+      "nombre": "write_tool",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "por confirmar",
+      "donde_vive": "scripts/inventory_phase1.py :: write_tool",
+      "stack": "Python >=3.10, shutil",
+      "entrada_salida": "Entrada: (candidate: ToolCandidate, project_dir: Path) → dict",
+      "mantiene": "Ricardo-icai",
+      "etiquetas": [
+        "write",
+        "tool"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/write_tool.json"
+    },
+    {
+      "nombre": "write_tools_index",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "por confirmar",
+      "donde_vive": "scripts/inventory_phase1.py :: write_tools_index",
+      "stack": "Python >=3.10, shutil",
+      "entrada_salida": "Entrada: (entries: list[dict]) → None",
+      "mantiene": "Ricardo-icai",
+      "etiquetas": [
+        "write",
+        "tools",
+        "index"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/write_tools_index.json"
+    }
+  ]
+}

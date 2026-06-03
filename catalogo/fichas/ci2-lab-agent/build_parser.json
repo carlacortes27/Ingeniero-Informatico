@@ -1,0 +1,13 @@
+{
+  "nombre": "build_parser",
+  "proyecto": "ci2-lab-agent",
+  "que_hace": "por confirmar",
+  "donde_vive": "src/ci2_lab/main.py :: build_parser",
+  "stack": "Python >=3.10",
+  "entrada_salida": "Entrada: (—) → argparse.ArgumentParser",
+  "mantiene": "carlacortes27",
+  "etiquetas": [
+    "build",
+    "parser"
+  ]
+}

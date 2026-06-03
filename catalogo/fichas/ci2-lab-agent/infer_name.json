@@ -1,0 +1,13 @@
+{
+  "nombre": "infer_name",
+  "proyecto": "ci2-lab-agent",
+  "que_hace": "por confirmar",
+  "donde_vive": "scripts/inventory_phase1.py :: infer_name",
+  "stack": "Python >=3.10, shutil",
+  "entrada_salida": "Entrada: (project_dir: Path, source_paths: list[str]) → str",
+  "mantiene": "Ricardo-icai",
+  "etiquetas": [
+    "infer",
+    "name"
+  ]
+}

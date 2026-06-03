@@ -1,0 +1,13 @@
+{
+  "nombre": "collect_signals",
+  "proyecto": "ci2-lab-agent",
+  "que_hace": "por confirmar",
+  "donde_vive": "scripts/inventory_phase1.py :: collect_signals",
+  "stack": "Python >=3.10, shutil",
+  "entrada_salida": "Entrada: (project_dir: Path) → tuple[list[str], list[str]]",
+  "mantiene": "Ricardo-icai",
+  "etiquetas": [
+    "collect",
+    "signals"
+  ]
+}

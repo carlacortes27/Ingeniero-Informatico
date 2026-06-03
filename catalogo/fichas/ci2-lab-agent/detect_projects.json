@@ -1,0 +1,13 @@
+{
+  "nombre": "detect_projects",
+  "proyecto": "ci2-lab-agent",
+  "que_hace": "por confirmar",
+  "donde_vive": "scripts/inventory_phase1.py :: detect_projects",
+  "stack": "Python >=3.10, shutil",
+  "entrada_salida": "Entrada: (project_arg: str | None) → list[Path]",
+  "mantiene": "Ricardo-icai",
+  "etiquetas": [
+    "detect",
+    "projects"
+  ]
+}

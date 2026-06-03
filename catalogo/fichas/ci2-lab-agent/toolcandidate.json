@@ -1,0 +1,13 @@
+{
+  "nombre": "ToolCandidate",
+  "proyecto": "ci2-lab-agent",
+  "que_hace": "por confirmar",
+  "donde_vive": "scripts/inventory_phase1.py :: class ToolCandidate",
+  "stack": "Python >=3.10, shutil",
+  "entrada_salida": "Clase (dataclass)",
+  "mantiene": "Ricardo-icai",
+  "etiquetas": [
+    "tool",
+    "candidate"
+  ]
+}

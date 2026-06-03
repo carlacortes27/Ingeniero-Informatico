@@ -1,0 +1,13 @@
+{
+  "nombre": "AuditorAgent.print_summary",
+  "proyecto": "ci2-lab-agent",
+  "que_hace": "por confirmar",
+  "donde_vive": "src/ci2_lab/agents/auditor_agent.py :: AuditorAgent.print_summary",
+  "stack": "Python >=3.10",
+  "entrada_salida": "Entrada: (inventory: ProjectInventory, files: dict[str, list[str]] | None = None) → None",
+  "mantiene": "carlacortes27",
+  "etiquetas": [
+    "print",
+    "summary"
+  ]
+}

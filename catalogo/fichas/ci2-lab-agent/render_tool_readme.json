@@ -1,0 +1,14 @@
+{
+  "nombre": "render_tool_readme",
+  "proyecto": "ci2-lab-agent",
+  "que_hace": "por confirmar",
+  "donde_vive": "scripts/inventory_phase1.py :: render_tool_readme",
+  "stack": "Python >=3.10, shutil",
+  "entrada_salida": "Entrada: (candidate: ToolCandidate) → str",
+  "mantiene": "Ricardo-icai",
+  "etiquetas": [
+    "render",
+    "tool",
+    "readme"
+  ]
+}
