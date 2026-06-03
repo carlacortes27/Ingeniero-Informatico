@@ -1,0 +1,36 @@
+{
+  "project_name": "repo_prueba",
+  "project_path": "C:\\Users\\carla\\OneDrive\\Escritorio\\CI2 Lab Reto 10\\Ingeniero-Informatico\\examples\\repo_prueba",
+  "languages": [
+    "Bash",
+    "Python"
+  ],
+  "package_managers": [
+    "pip"
+  ],
+  "dependencies": {
+    "python": [],
+    "node": [],
+    "system": []
+  },
+  "tools": [
+    "Docker"
+  ],
+  "frameworks": [],
+  "scripts": [
+    {
+      "path": "run.sh",
+      "type": "unknown",
+      "commands": []
+    }
+  ],
+  "documentation": {
+    "has_readme": true
+  },
+  "audit": {
+    "is_valid": true,
+    "errors": [],
+    "warnings": [],
+    "fixed_fields": []
+  }
+}

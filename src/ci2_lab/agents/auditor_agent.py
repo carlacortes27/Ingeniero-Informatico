@@ -3,18 +3,12 @@ import json
 from pathlib import Path
 
 from ci2_lab.agents.scanner_agent import ScannerAgent
-from ci2_lab.agents.tools_agent import ToolsAgent
 from ci2_lab.models import AuditResult, ProjectInventory
 
 
 class AuditorAgent:
-    def __init__(
-        self,
-        scanner: ScannerAgent | None = None,
-        tools_agent: ToolsAgent | None = None,
-    ) -> None:
+    def __init__(self, scanner: ScannerAgent | None = None) -> None:
         self.scanner = scanner or ScannerAgent()
-        self.tools_agent = tools_agent or ToolsAgent()
 
     def scan(self, project_path: str | Path) -> ProjectInventory:
         root = Path(project_path).resolve()
@@ -46,7 +40,7 @@ class AuditorAgent:
         files = scan_result.files
 
         languages = self._detect_languages(files)
-        tools, frameworks = self.tools_agent.detect(root, files)
+        tools = self._detect_tools(files)
         package_managers = self._detect_package_managers(files)
         documentation = {
             "has_readme": any(
@@ -66,7 +60,7 @@ class AuditorAgent:
             package_managers=package_managers,
             dependencies={"python": [], "node": [], "system": []},
             tools=tools,
-            frameworks=frameworks,
+            frameworks=[],
             scripts=[
                 {"path": path, "type": "unknown", "commands": []}
                 for path in files.get("scripts", [])
@@ -155,6 +149,14 @@ class AuditorAgent:
 
         return sorted(set(languages))
 
+    def _detect_tools(self, files: dict[str, list[str]]) -> list[str]:
+        tools: list[str] = []
+
+        if files.get("docker"):
+            tools.append("Docker")
+
+        return sorted(set(tools))
+
     def _detect_package_managers(self, files: dict[str, list[str]]) -> list[str]:
         package_managers: list[str] = []
 
@@ -191,7 +193,6 @@ class AuditorAgent:
         print(f"- Ruta: {inventory.project_path}")
         print(f"- Lenguajes: {', '.join(inventory.languages) or 'No detectados'}")
         print(f"- Herramientas: {', '.join(inventory.tools) or 'No detectadas'}")
-        print(f"- Frameworks: {', '.join(inventory.frameworks) or 'No detectados'}")
         print(f"- README: {'si' if inventory.documentation.get('has_readme') else 'no'}")
 
         if files:
