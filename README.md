@@ -1,10 +1,80 @@
 # Arquitectura de Subagentes — CI2 Lab
 
+## Vision completa del proyecto
+
+CI2 Lab es una herramienta CLI en Python para analizar repositorios locales o repositorios publicos de GitHub y generar un inventario tecnico de componentes reutilizables.
+
+El objetivo final del proyecto se divide en cuatro fases:
+
+### Fase 1 - Inventario tecnico determinista
+
+Analiza estaticamente el repositorio sin ejecutar codigo. Detecta lenguajes, gestores de paquetes, dependencias, frameworks, herramientas de CI/CD, scripts y documentacion. Esta fase se basa en reglas deterministas y subagentes especializados.
+
+### Fase 2 - Seleccion inteligente de archivos
+
+A partir del arbol de archivos y del inventario tecnico de Fase 1, un LLM seleccionara los archivos con mayor probabilidad de contener logica reutilizable. En esta fase todavia no se lee el contenido de esos archivos.
+
+### Fase 3 - Extraccion semantica con LLM
+
+El sistema leera los archivos seleccionados y pedira a un LLM que extraiga componentes reutilizables con una estructura fija:
+
+```json
+{
+  "componente": "Nombre descriptivo",
+  "tipo": "logica_dominio | integracion_externa | flujo_reutilizable | utilidad",
+  "archivo": "ruta/relativa.py",
+  "descripcion": "Que hace y por que es reutilizable",
+  "dependencias_externas": ["libreria"],
+  "adaptabilidad": "alta | media | baja",
+  "fragmento_clave": "funcion o clase representativa"
+}
+```
+
+### Fase 4 - Salida estructurada
+
+El sistema consolidara los resultados en `inventory.json` y, opcionalmente, en un Markdown legible como `inventory.md` o `report.md`. Ese inventario servira como referencia tecnica al iniciar proyectos nuevos.
+
+---
+
+## Arquitectura de Subagentes para Fase 1
+
+La arquitectura descrita a continuacion corresponde principalmente a la Fase 1. Las fases 2 y 3 con LLM se apoyaran en este inventario tecnico inicial, pero todavia no estan implementadas.
+
 ## Objetivo del sistema
 
 El objetivo de esta parte del proyecto **CI2 Lab** es construir un sistema basado en subagentes capaz de analizar repositorios de software de la Cátedra, extraer las herramientas utilizadas, documentarlas y generar un inventario técnico estructurado.
 
 El sistema debe funcionar de forma modular. Cada subagente tendrá una responsabilidad concreta y el **Agente Auditor** será el encargado de coordinar el flujo general, supervisar los resultados y comprobar que todos los subagentes funcionan correctamente.
+
+---
+
+## Estado actual
+
+Actualmente estan implementados o parcialmente implementados:
+
+* CLI `scan` para rutas locales y URLs publicas de GitHub.
+* Clonacion superficial con `git clone --depth 1`.
+* Limpieza de carpetas temporales despues de analizar URLs.
+* `ScannerAgent` con clasificacion de archivos relevantes.
+* Deteccion basica de lenguajes.
+* Deteccion basica de herramientas y frameworks.
+* Tests de scanner, entrada GitHub y deteccion de herramientas.
+
+Pendiente para completar la Fase 1:
+
+* Separar `LanguageAgent` de la logica del auditor.
+* Implementar `DependencyAgent` con extraccion real de dependencias.
+* Implementar `ScriptsAgent`.
+* Implementar `DocumentationAgent`.
+* Generar `outputs/inventory.json`.
+* Generar `outputs/inventory.md` o `outputs/report.md`.
+* Completar auditoria de coherencia.
+
+Pendiente para la vision final:
+
+* Seleccion inteligente de archivos con LLM.
+* Extraccion semantica de componentes reutilizables con LLM.
+* Consolidacion del inventario final de componentes reutilizables.
 
 ---
 
@@ -727,7 +797,7 @@ No debe modificar el inventario. Solo debe convertirlo en un documento fácil de
 Debe generar:
 
 ```text
-outputs/report.md
+outputs/inventory.md o outputs/report.md
 ```
 
 El informe debe incluir:
@@ -900,7 +970,7 @@ Analizando proyecto: repositorio
 
 Resultado:
 - outputs/inventory.json
-- outputs/report.md
+- outputs/inventory.md o outputs/report.md
 
 Limpiando carpeta temporal...
 Listo.
@@ -1155,7 +1225,7 @@ Analizando proyecto: repo_prueba
 
 Resultado:
 - outputs/inventory.json
-- outputs/report.md
+- outputs/inventory.md o outputs/report.md
 
 Advertencias:
 - README.md encontrado, pero no contiene sección de instalación.
@@ -1180,7 +1250,7 @@ Analizando proyecto: repositorio
 
 Resultado:
 - outputs/inventory.json
-- outputs/report.md
+- outputs/inventory.md o outputs/report.md
 
 Limpiando carpeta temporal...
 Listo.
@@ -1281,10 +1351,33 @@ La primera versión mínima debe poder:
 5. Detectar Docker si existe `Dockerfile`.
 6. Detectar README.
 7. Generar `inventory.json`.
-8. Generar `report.md`.
+8. Generar `inventory.md` o `report.md`.
 9. Incluir auditoría con errores y advertencias.
 10. No ejecutar ningún archivo del proyecto analizado.
 11. Limpiar carpetas temporales si el origen era una URL.
+
+---
+
+# Tests
+
+Ejecutar toda la suite:
+
+```bash
+python -m pytest -q
+```
+
+Ejecutar solo los tests del scanner:
+
+```bash
+python -m pytest tests/test_scanner_agent.py -q
+```
+
+Probar el flujo con una URL publica de GitHub desde PowerShell:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m ci2_lab.main scan https://github.com/Donnype/fastapi-template
+```
 
 ---
 
