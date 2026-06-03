@@ -25,10 +25,12 @@ class ScannerAgent:
             "dependencies": [],
             "node": [],
             "docker": [],
+            "ci": [],
             "scripts": [],
             "documentation": [],
             "notebooks": [],
             "config": [],
+            "locks": [],
         }
 
         for path in self._walk(root):
@@ -66,17 +68,45 @@ class ScannerAgent:
         name = path.name
         lower_name = name.lower()
         suffix = path.suffix.lower()
+        relative_parts = tuple(part.lower() for part in path.parts)
 
-        if lower_name == "readme.md":
+        if lower_name in {
+            "readme.md",
+            "readme.rst",
+            "install.md",
+            "contributing.md",
+            "changelog.md",
+        }:
             return "documentation"
-        if lower_name in {"requirements.txt", "pyproject.toml"}:
+        if "docs" in relative_parts:
+            return "documentation"
+        if lower_name in {
+            "requirements.txt",
+            "pyproject.toml",
+            "setup.py",
+            "setup.cfg",
+            "environment.yml",
+            "environment.yaml",
+            "pipfile",
+        }:
             return "dependencies"
+        if lower_name in {
+            "poetry.lock",
+            "package-lock.json",
+            "yarn.lock",
+            "pnpm-lock.yaml",
+        }:
+            return "locks"
         if lower_name == "package.json":
             return "node"
-        if name == "Dockerfile":
+        if name == "Dockerfile" or lower_name in {"docker-compose.yml", "docker-compose.yaml"}:
             return "docker"
         if name == "Makefile" or suffix == ".sh":
             return "scripts"
+        if lower_name == ".gitlab-ci.yml":
+            return "ci"
+        if ".github" in relative_parts and "workflows" in relative_parts:
+            return "ci"
         if suffix == ".py":
             return "python"
         if suffix == ".ipynb":
