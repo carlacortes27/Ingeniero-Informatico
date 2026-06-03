@@ -1,4 +1,5 @@
 from dataclasses import asdict
+import json
 from pathlib import Path
 
 from ci2_lab.agents.scanner_agent import ScannerAgent
@@ -74,8 +75,69 @@ class AuditorAgent:
             audit=asdict(audit),
         )
 
+        self._write_outputs(inventory)
         self.print_summary(inventory, files)
         return inventory
+
+    def _write_outputs(self, inventory: ProjectInventory) -> None:
+        output_dir = Path("outputs")
+        output_dir.mkdir(exist_ok=True)
+
+        inventory_data = asdict(inventory)
+
+        inventory_path = output_dir / "inventory.json"
+        inventory_path.write_text(
+            json.dumps(inventory_data, indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
+
+        report_path = output_dir / "report.md"
+        report_path.write_text(
+            self._build_report(inventory),
+            encoding="utf-8",
+        )
+
+    def _build_report(self, inventory: ProjectInventory) -> str:
+        languages = inventory.languages or ["No detectados"]
+        tools = inventory.tools or ["No detectadas"]
+        readme_status = (
+            "README encontrado."
+            if inventory.documentation.get("has_readme")
+            else "README no encontrado."
+        )
+
+        lines = [
+            f"# Informe de inventario: {inventory.project_name}",
+            "",
+            "## Resumen",
+            "",
+            f"Proyecto analizado en: {inventory.project_path}",
+            "",
+            "## Lenguajes detectados",
+            "",
+            *[f"- {language}" for language in languages],
+            "",
+            "## Herramientas detectadas",
+            "",
+            *[f"- {tool}" for tool in tools],
+            "",
+            "## Documentacion",
+            "",
+            f"- {readme_status}",
+        ]
+
+        warnings = inventory.audit.get("warnings", [])
+        if warnings:
+            lines.extend(
+                [
+                    "",
+                    "## Advertencias",
+                    "",
+                    *[f"- {warning}" for warning in warnings],
+                ]
+            )
+
+        return "\n".join(lines) + "\n"
 
     def _detect_languages(self, files: dict[str, list[str]]) -> list[str]:
         languages: list[str] = []
