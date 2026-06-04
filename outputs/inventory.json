@@ -27,7 +27,7 @@
   "scripts": [
     {
       "path": "run.sh",
-      "type": "unknown",
+      "type": "shell",
       "commands": []
     }
   ],
@@ -37,10 +37,18 @@
     "has_installation_section": false,
     "has_usage_section": false,
     "has_examples_section": false,
+    "has_tests_section": false,
+    "has_docker_section": false,
+    "has_architecture_section": false,
+    "has_dependencies_section": false,
     "missing_sections": [
       "installation",
       "usage",
-      "examples"
+      "examples",
+      "tests",
+      "docker",
+      "architecture",
+      "dependencies"
     ]
   },
   "audit": {

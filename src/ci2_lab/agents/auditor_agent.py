@@ -5,8 +5,10 @@ from pathlib import Path
 from ci2_lab.agents.dependency_agent import DependencyAgent
 from ci2_lab.agents.documentation_agent import DocumentationAgent
 from ci2_lab.agents.inventory_agent import InventoryAgent
+from ci2_lab.agents.language_agent import LanguageAgent
 from ci2_lab.agents.report_agent import ReportAgent
 from ci2_lab.agents.scanner_agent import ScannerAgent
+from ci2_lab.agents.scripts_agent import ScriptsAgent
 from ci2_lab.agents.tools_agent import ToolsAgent
 from ci2_lab.models import AuditResult, ProjectInventory
 
@@ -17,6 +19,8 @@ class AuditorAgent:
         scanner: ScannerAgent | None = None,
         dependency_agent: DependencyAgent | None = None,
         documentation_agent: DocumentationAgent | None = None,
+        language_agent: LanguageAgent | None = None,
+        scripts_agent: ScriptsAgent | None = None,
         tools_agent: ToolsAgent | None = None,
         inventory_agent: InventoryAgent | None = None,
         report_agent: ReportAgent | None = None,
@@ -25,6 +29,8 @@ class AuditorAgent:
         self.scanner = scanner or ScannerAgent()
         self.dependency_agent = dependency_agent or DependencyAgent()
         self.documentation_agent = documentation_agent or DocumentationAgent()
+        self.language_agent = language_agent or LanguageAgent()
+        self.scripts_agent = scripts_agent or ScriptsAgent()
         self.tools_agent = tools_agent or ToolsAgent()
         self.inventory_agent = inventory_agent or InventoryAgent()
         self.report_agent = report_agent or ReportAgent()
@@ -61,6 +67,8 @@ class AuditorAgent:
 
         dependency_result = self.dependency_agent.analyze(root, scan_result)
         documentation = self.documentation_agent.analyze(root, scan_result)
+        languages = self.language_agent.detect(scan_result)
+        scripts = self.scripts_agent.analyze(root, scan_result)
         tools, frameworks = self.tools_agent.detect(root, files)
 
         if not documentation["has_readme"]:
@@ -69,12 +77,12 @@ class AuditorAgent:
         inventory = ProjectInventory(
             project_name=scan_result.project_name,
             project_path=scan_result.project_path,
-            languages=[],
+            languages=languages,
             package_managers=dependency_result["package_managers"],
             dependencies=dependency_result["dependencies"],
             tools=tools,
             frameworks=frameworks,
-            scripts=[],
+            scripts=scripts,
             documentation=documentation,
             audit=asdict(audit),
         )
