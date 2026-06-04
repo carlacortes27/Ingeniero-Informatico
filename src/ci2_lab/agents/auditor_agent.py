@@ -1,6 +1,8 @@
 from dataclasses import asdict
 from pathlib import Path
 
+from ci2_lab.agents.dependency_agent import DependencyAgent
+from ci2_lab.agents.documentation_agent import DocumentationAgent
 from ci2_lab.agents.inventory_agent import InventoryAgent
 from ci2_lab.agents.report_agent import ReportAgent
 from ci2_lab.agents.scanner_agent import ScannerAgent
@@ -11,10 +13,14 @@ class AuditorAgent:
     def __init__(
         self,
         scanner: ScannerAgent | None = None,
+        dependency_agent: DependencyAgent | None = None,
+        documentation_agent: DocumentationAgent | None = None,
         inventory_agent: InventoryAgent | None = None,
         report_agent: ReportAgent | None = None,
     ) -> None:
         self.scanner = scanner or ScannerAgent()
+        self.dependency_agent = dependency_agent or DependencyAgent()
+        self.documentation_agent = documentation_agent or DocumentationAgent()
         self.inventory_agent = inventory_agent or InventoryAgent()
         self.report_agent = report_agent or ReportAgent()
 
@@ -49,24 +55,18 @@ class AuditorAgent:
 
         languages = self._detect_languages(files)
         tools = self._detect_tools(files)
-        package_managers = self._detect_package_managers(files)
-        documentation = {
-            "has_readme": any(
-                path.lower() == "readme.md"
-                or path.lower().endswith("/readme.md")
-                for path in files.get("documentation", [])
-            )
-        }
+        dependency_result = self.dependency_agent.analyze(root, scan_result)
+        documentation = self.documentation_agent.analyze(root, scan_result)
 
         if not documentation["has_readme"]:
-            audit.warnings.append("No se ha encontrado README.md.")
+            audit.warnings.append("No se ha encontrado README.md o README.rst.")
 
         inventory = ProjectInventory(
             project_name=scan_result.project_name,
             project_path=scan_result.project_path,
             languages=languages,
-            package_managers=package_managers,
-            dependencies={"python": [], "node": [], "system": []},
+            package_managers=dependency_result["package_managers"],
+            dependencies=dependency_result["dependencies"],
             tools=tools,
             frameworks=[],
             scripts=[

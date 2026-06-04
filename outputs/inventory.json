@@ -9,8 +9,15 @@
     "pip"
   ],
   "dependencies": {
-    "python": [],
-    "node": [],
+    "python": [
+      "numpy",
+      "pandas",
+      "scikit-learn"
+    ],
+    "node": {
+      "dependencies": [],
+      "devDependencies": []
+    },
     "system": []
   },
   "tools": [
@@ -25,7 +32,16 @@
     }
   ],
   "documentation": {
-    "has_readme": true
+    "has_readme": true,
+    "has_docs_folder": false,
+    "has_installation_section": false,
+    "has_usage_section": false,
+    "has_examples_section": false,
+    "missing_sections": [
+      "installation",
+      "usage",
+      "examples"
+    ]
   },
   "audit": {
     "is_valid": true,
