@@ -1,0 +1,13 @@
+{
+  "nombre": "InventoryAgent",
+  "proyecto": "ci2-lab-agent",
+  "que_hace": "Agente que serializa un ProjectInventory completo a un fichero JSON inventory.json en el directorio de salida indicado.",
+  "donde_vive": "src/ci2_lab/agents/inventory_agent.py :: class InventoryAgent",
+  "stack": "Python >=3.10",
+  "entrada_salida": "Clase. Métodos públicos: save",
+  "mantiene": "carlacortes27",
+  "etiquetas": [
+    "inventory",
+    "agent"
+  ]
+}

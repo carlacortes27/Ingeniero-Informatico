@@ -1,7 +1,7 @@
 {
   "nombre": "ToolCandidate",
   "proyecto": "ci2-lab-agent",
-  "que_hace": "por confirmar",
+  "que_hace": "Dataclass que representa un candidato a herramienta reutilizable detectado en un proyecto: identificador slug, nombre legible, proyecto de origen, rutas fuente, lista de evidencias encontradas, descripción breve, nivel de confianza (medium/high) y estado del registro.",
   "donde_vive": "scripts/inventory_phase1.py :: class ToolCandidate",
   "stack": "Python >=3.10, shutil",
   "entrada_salida": "Clase (dataclass)",

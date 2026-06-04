@@ -1,0 +1,14 @@
+{
+  "nombre": "clone_github_repo",
+  "proyecto": "ci2-lab-agent",
+  "que_hace": "Clona un repositorio de GitHub con git clone --depth 1 en un directorio temporal creado con tempfile. Devuelve la ruta local del repositorio clonado y su nombre. Lanza GitHubCloneError si la URL no es válida, git no está instalado o la clonación falla; limpia el directorio temporal en caso de error.",
+  "donde_vive": "src/ci2_lab/utils.py :: clone_github_repo",
+  "stack": "Python >=3.10, shutil, tempfile, urllib",
+  "entrada_salida": "Entrada: (url: str) → tuple[str, str]",
+  "mantiene": "jpuentesanchezz03-byte",
+  "etiquetas": [
+    "clone",
+    "github",
+    "repo"
+  ]
+}

@@ -1,11 +1,11 @@
 {
   "nombre": "ScannerAgent.scan",
   "proyecto": "ci2-lab-agent",
-  "que_hace": "por confirmar",
+  "que_hace": "Recorre el directorio raíz del proyecto, ignora carpetas de sistema y clasifica todos los ficheros encontrados. Devuelve un ScanResult con el nombre del proyecto, su ruta y el mapa de ficheros agrupados por categoría.",
   "donde_vive": "src/ci2_lab/agents/scanner_agent.py :: ScannerAgent.scan",
   "stack": "Python >=3.10",
   "entrada_salida": "Entrada: (project_path: str | Path) → ScanResult",
-  "mantiene": "carlacortes27",
+  "mantiene": "jpuentesanchezz03-byte",
   "etiquetas": [
     "scan"
   ]

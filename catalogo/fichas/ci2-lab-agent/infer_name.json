@@ -1,7 +1,7 @@
 {
   "nombre": "infer_name",
   "proyecto": "ci2-lab-agent",
-  "que_hace": "por confirmar",
+  "que_hace": "Infiere el nombre legible de una herramienta a partir de sus rutas fuente: prioriza el nombre del fichero de entrada principal (main.py, train.py, etc.) y si no lo encuentra, usa el nombre del directorio del proyecto, convirtiendo guiones y guiones bajos en espacios y aplicando Title Case.",
   "donde_vive": "scripts/inventory_phase1.py :: infer_name",
   "stack": "Python >=3.10, shutil",
   "entrada_salida": "Entrada: (project_dir: Path, source_paths: list[str]) → str",

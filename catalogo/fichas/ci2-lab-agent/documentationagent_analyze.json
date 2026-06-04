@@ -1,0 +1,12 @@
+{
+  "nombre": "DocumentationAgent.analyze",
+  "proyecto": "ci2-lab-agent",
+  "que_hace": "Localiza el README del proyecto, detecta si existe carpeta docs/ y comprueba qué secciones estándar (installation, usage, examples) contiene el README. Devuelve un diccionario con flags booleanos por sección y la lista de secciones ausentes.",
+  "donde_vive": "src/ci2_lab/agents/documentation_agent.py :: DocumentationAgent.analyze",
+  "stack": "Python >=3.10, unicodedata",
+  "entrada_salida": "Entrada: (project_path: str | Path, scan_result: ScanResult | None = None) → dict",
+  "mantiene": "carlacortes27",
+  "etiquetas": [
+    "analyze"
+  ]
+}

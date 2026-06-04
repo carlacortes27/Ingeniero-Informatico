@@ -1,7 +1,7 @@
 {
   "nombre": "AuditorAgent.scan",
   "proyecto": "ci2-lab-agent",
-  "que_hace": "por confirmar",
+  "que_hace": "Valida la ruta del proyecto, coordina los agentes especializados y construye un ProjectInventory con lenguajes, herramientas, dependencias y documentación detectados. Escribe inventory.json y report.md en outputs/ y muestra el resumen por consola. Devuelve el ProjectInventory resultante.",
   "donde_vive": "src/ci2_lab/agents/auditor_agent.py :: AuditorAgent.scan",
   "stack": "Python >=3.10",
   "entrada_salida": "Entrada: (project_path: str | Path) → ProjectInventory",

@@ -1,7 +1,7 @@
 {
   "nombre": "main",
   "proyecto": "ci2-lab-agent",
-  "que_hace": "por confirmar",
+  "que_hace": "Punto de entrada CLI del inventariador Phase 1. Parsea --project (proyecto concreto) y --clean (borrar tools previos), asegura la estructura de directorios, detecta proyectos, genera un ToolCandidate por cada uno y escribe los manifiestos y el índice global.",
   "donde_vive": "scripts/inventory_phase1.py :: main",
   "stack": "Python >=3.10, shutil",
   "entrada_salida": "Entrada: (—) → int",

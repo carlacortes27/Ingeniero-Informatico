@@ -1,0 +1,12 @@
+{
+  "nombre": "ToolsAgent.detect",
+  "proyecto": "ci2-lab-agent",
+  "que_hace": "Analiza los ficheros del proyecto (Dockerfile, Makefile, .github/workflows/, requirements.txt, pyproject.toml, package.json) y devuelve dos listas ordenadas: herramientas de infraestructura detectadas y frameworks detectados.",
+  "donde_vive": "src/ci2_lab/agents/tools_agent.py :: ToolsAgent.detect",
+  "stack": "Python >=3.10, tomllib",
+  "entrada_salida": "Entrada: (project_path: str | Path, files: dict[str, list[str]]) → tuple[list[str], list[str]]",
+  "mantiene": "jpuentesanchezz03-byte",
+  "etiquetas": [
+    "detect"
+  ]
+}

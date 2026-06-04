@@ -1,0 +1,14 @@
+{
+  "nombre": "GitHubCloneError",
+  "proyecto": "ci2-lab-agent",
+  "que_hace": "Excepción personalizada (hereda de RuntimeError) que se lanza cuando falla la validación o la clonación de un repositorio de GitHub (URL inválida, git no instalado o fallo de red).",
+  "donde_vive": "src/ci2_lab/utils.py :: class GitHubCloneError",
+  "stack": "Python >=3.10, shutil, tempfile, urllib",
+  "entrada_salida": "Clase. Métodos públicos: —",
+  "mantiene": "jpuentesanchezz03-byte",
+  "etiquetas": [
+    "git",
+    "hub",
+    "clone"
+  ]
+}

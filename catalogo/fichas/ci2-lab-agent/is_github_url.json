@@ -1,0 +1,13 @@
+{
+  "nombre": "is_github_url",
+  "proyecto": "ci2-lab-agent",
+  "que_hace": "Comprueba si una cadena de texto es una URL HTTPS válida de GitHub (esquema https y host exactamente github.com). Devuelve True o False.",
+  "donde_vive": "src/ci2_lab/utils.py :: is_github_url",
+  "stack": "Python >=3.10, shutil, tempfile, urllib",
+  "entrada_salida": "Entrada: (input_value: str) → bool",
+  "mantiene": "jpuentesanchezz03-byte",
+  "etiquetas": [
+    "github",
+    "url"
+  ]
+}

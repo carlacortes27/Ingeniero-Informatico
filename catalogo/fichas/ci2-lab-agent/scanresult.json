@@ -1,7 +1,7 @@
 {
   "nombre": "ScanResult",
   "proyecto": "ci2-lab-agent",
-  "que_hace": "por confirmar",
+  "que_hace": "Dataclass que almacena el resultado de un escaneo de proyecto: nombre del proyecto, ruta absoluta y un mapa de ficheros clasificados por categoría (python, dependencias, docker, scripts, documentación, notebooks, config).",
   "donde_vive": "src/ci2_lab/models.py :: class ScanResult",
   "stack": "Python >=3.10",
   "entrada_salida": "Clase (dataclass)",

@@ -1,7 +1,7 @@
 {
   "nombre": "ProjectInventory",
   "proyecto": "ci2-lab-agent",
-  "que_hace": "por confirmar",
+  "que_hace": "Dataclass central que agrega el inventario completo de un proyecto: lenguajes detectados, gestores de paquetes, dependencias (Python y Node), herramientas, frameworks, scripts, estado de documentación y resultado de auditoría.",
   "donde_vive": "src/ci2_lab/models.py :: class ProjectInventory",
   "stack": "Python >=3.10",
   "entrada_salida": "Clase (dataclass)",

@@ -1,0 +1,13 @@
+{
+  "nombre": "DocumentationAgent",
+  "proyecto": "ci2-lab-agent",
+  "que_hace": "Agente que analiza la documentación de un proyecto: localiza el README (md o rst), comprueba si existe carpeta docs/ y verifica la presencia de las secciones estándar installation, usage y examples, con soporte para títulos en español e inglés.",
+  "donde_vive": "src/ci2_lab/agents/documentation_agent.py :: class DocumentationAgent",
+  "stack": "Python >=3.10, unicodedata",
+  "entrada_salida": "Clase. Métodos públicos: analyze",
+  "mantiene": "carlacortes27",
+  "etiquetas": [
+    "documentation",
+    "agent"
+  ]
+}

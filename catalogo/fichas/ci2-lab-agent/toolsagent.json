@@ -1,0 +1,13 @@
+{
+  "nombre": "ToolsAgent",
+  "proyecto": "ci2-lab-agent",
+  "que_hace": "Agente que detecta herramientas de desarrollo (Docker, Docker Compose, Make, GitHub Actions, GitLab CI, Jupyter) y frameworks (FastAPI, Flask, Django, React, Vue, Angular, Express, Vite) presentes en un proyecto analizando sus ficheros de configuración y manifiestos de dependencias.",
+  "donde_vive": "src/ci2_lab/agents/tools_agent.py :: class ToolsAgent",
+  "stack": "Python >=3.10, tomllib",
+  "entrada_salida": "Clase. Métodos públicos: detect",
+  "mantiene": "jpuentesanchezz03-byte",
+  "etiquetas": [
+    "tools",
+    "agent"
+  ]
+}

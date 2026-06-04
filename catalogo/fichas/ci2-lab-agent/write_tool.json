@@ -1,7 +1,7 @@
 {
   "nombre": "write_tool",
   "proyecto": "ci2-lab-agent",
-  "que_hace": "por confirmar",
+  "que_hace": "Escribe en disco la estructura completa de un tool detectado: crea el directorio inventory/tools/<tool_id>/ con subdirectorios source/, docs/, examples/ y tests/, y escribe los ficheros tool.yaml, README.md y un marcador SOURCE_PROJECT.txt. Devuelve el entry dict para el índice global.",
   "donde_vive": "scripts/inventory_phase1.py :: write_tool",
   "stack": "Python >=3.10, shutil",
   "entrada_salida": "Entrada: (candidate: ToolCandidate, project_dir: Path) → dict",

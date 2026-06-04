@@ -1,11 +1,11 @@
 {
   "nombre": "ScannerAgent",
   "proyecto": "ci2-lab-agent",
-  "que_hace": "por confirmar",
+  "que_hace": "Agente que recorre recursivamente un directorio de proyecto y clasifica cada fichero por tipo (python, dependencias, docker, scripts, documentación, notebooks, config), ignorando carpetas de sistema (.git, .venv, node_modules, etc.). Devuelve un ScanResult con el mapa completo de ficheros por categoría.",
   "donde_vive": "src/ci2_lab/agents/scanner_agent.py :: class ScannerAgent",
   "stack": "Python >=3.10",
   "entrada_salida": "Clase. Métodos públicos: scan",
-  "mantiene": "carlacortes27",
+  "mantiene": "jpuentesanchezz03-byte",
   "etiquetas": [
     "scanner",
     "agent"

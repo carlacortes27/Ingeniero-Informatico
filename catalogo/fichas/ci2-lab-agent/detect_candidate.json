@@ -1,7 +1,7 @@
 {
   "nombre": "detect_candidate",
   "proyecto": "ci2-lab-agent",
-  "que_hace": "por confirmar",
+  "que_hace": "Orquesta la detección completa de un candidato a herramienta: recoge evidencias con collect_signals, calcula la confianza (medium si <5 evidencias, high si ≥5) y construye un ToolCandidate. Devuelve None si hay menos de 2 evidencias (proyecto insuficiente).",
   "donde_vive": "scripts/inventory_phase1.py :: detect_candidate",
   "stack": "Python >=3.10, shutil",
   "entrada_salida": "Entrada: (project_dir: Path) → ToolCandidate | None",

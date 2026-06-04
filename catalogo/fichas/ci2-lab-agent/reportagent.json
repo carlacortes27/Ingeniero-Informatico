@@ -1,0 +1,13 @@
+{
+  "nombre": "ReportAgent",
+  "proyecto": "ci2-lab-agent",
+  "que_hace": "Agente que genera un informe legible en Markdown a partir de un ProjectInventory, resumiendo lenguajes detectados, herramientas, estado del README y listando errores y advertencias de la auditoría.",
+  "donde_vive": "src/ci2_lab/agents/report_agent.py :: class ReportAgent",
+  "stack": "Python >=3.10",
+  "entrada_salida": "Clase. Métodos públicos: save",
+  "mantiene": "carlacortes27",
+  "etiquetas": [
+    "report",
+    "agent"
+  ]
+}

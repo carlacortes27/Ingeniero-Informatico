@@ -1,11 +1,11 @@
 {
   "nombre": "main",
   "proyecto": "ci2-lab-agent",
-  "que_hace": "por confirmar",
+  "que_hace": "Punto de entrada CLI de ci2-lab. Parsea los argumentos, clona el repositorio si el input es una URL de GitHub (limpiando el directorio temporal al salir), ejecuta AuditorAgent.scan y devuelve código 0 si el inventario es válido o 1 si hay errores.",
   "donde_vive": "src/ci2_lab/main.py :: main",
   "stack": "Python >=3.10",
   "entrada_salida": "Entrada: (—) → int",
-  "mantiene": "carlacortes27",
+  "mantiene": "jpuentesanchezz03-byte",
   "etiquetas": [
     "main"
   ]

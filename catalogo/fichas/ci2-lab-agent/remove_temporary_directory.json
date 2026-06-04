@@ -1,0 +1,14 @@
+{
+  "nombre": "remove_temporary_directory",
+  "proyecto": "ci2-lab-agent",
+  "que_hace": "Elimina de forma segura un directorio temporal (creado por clone_github_repo) usando shutil.rmtree con ignore_errors=True. Es un no-op si la ruta es None o ya no existe.",
+  "donde_vive": "src/ci2_lab/utils.py :: remove_temporary_directory",
+  "stack": "Python >=3.10, shutil, tempfile, urllib",
+  "entrada_salida": "Entrada: (path: str | Path | None) → None",
+  "mantiene": "jpuentesanchezz03-byte",
+  "etiquetas": [
+    "remove",
+    "temporary",
+    "directory"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "nombre": "DependencyAgent",
+  "proyecto": "ci2-lab-agent",
+  "que_hace": "Agente que analiza los ficheros de dependencias de un proyecto (requirements.txt, pyproject.toml, package.json) y extrae la lista de paquetes Python y Node junto con los gestores de paquetes presentes.",
+  "donde_vive": "src/ci2_lab/agents/dependency_agent.py :: class DependencyAgent",
+  "stack": "Python >=3.10",
+  "entrada_salida": "Clase. Métodos públicos: analyze",
+  "mantiene": "carlacortes27",
+  "etiquetas": [
+    "dependency",
+    "agent"
+  ]
+}

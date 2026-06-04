@@ -26,6 +26,7 @@ SKIP_DIRS = {
     "__pycache__", ".venv", "venv", "env", ".git",
     "node_modules", "dist", "build", ".mypy_cache", ".pytest_cache",
     "catalogo",  # carpeta de salida del propio catálogo
+    "tests", "test",  # suites de test no son piezas reutilizables
 }
 
 # Funciones genéricas que no aportan valor como pieza reutilizable
@@ -438,6 +439,8 @@ def generate(repo_path: str, proyecto: str) -> None:
 
     for py_file in sorted(repo.rglob("*.py")):
         if any(part in SKIP_DIRS for part in py_file.parts):
+            continue
+        if py_file.name.startswith("test_") or py_file.name.startswith("conftest"):
             continue
         fichas, omitidas = scan_python_file(
             py_file, repo, proyecto, project_deps, python_version, local_pkgs

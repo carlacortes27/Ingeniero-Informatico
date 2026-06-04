@@ -1,7 +1,7 @@
 {
   "nombre": "slugify",
   "proyecto": "ci2-lab-agent",
-  "que_hace": "por confirmar",
+  "que_hace": "Convierte una cadena arbitraria en un slug válido para usar como identificador de herramienta: pasa a minúsculas, sustituye caracteres no alfanuméricos por guiones bajos y elimina guiones bajos iniciales/finales.",
   "donde_vive": "scripts/inventory_phase1.py :: slugify",
   "stack": "Python >=3.10, shutil",
   "entrada_salida": "Entrada: (value: str) → str",

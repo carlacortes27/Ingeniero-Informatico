@@ -1,7 +1,7 @@
 {
   "nombre": "write_tools_index",
   "proyecto": "ci2-lab-agent",
-  "que_hace": "por confirmar",
+  "que_hace": "Escribe el fichero inventory/index/tools_index.json con la lista completa de tools detectados en la ejecución actual, serializada como JSON con indentación de 2 espacios.",
   "donde_vive": "scripts/inventory_phase1.py :: write_tools_index",
   "stack": "Python >=3.10, shutil",
   "entrada_salida": "Entrada: (entries: list[dict]) → None",

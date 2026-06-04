@@ -1,7 +1,7 @@
 {
   "nombre": "AuditorAgent.print_summary",
   "proyecto": "ci2-lab-agent",
-  "que_hace": "por confirmar",
+  "que_hace": "Imprime por consola un resumen legible del inventario: ruta del proyecto, lenguajes detectados, herramientas, presencia de README, número total de ficheros por categoría y lista de advertencias si las hay.",
   "donde_vive": "src/ci2_lab/agents/auditor_agent.py :: AuditorAgent.print_summary",
   "stack": "Python >=3.10",
   "entrada_salida": "Entrada: (inventory: ProjectInventory, files: dict[str, list[str]] | None = None) → None",

@@ -1,14 +1,14 @@
 {
-  "generado": "2026-06-03T08:25:15.703289+00:00",
-  "total": 24,
+  "generado": "2026-06-04T07:55:42.715346+00:00",
+  "total": 38,
   "por_proyecto": {
-    "ci2-lab-agent": 24
+    "ci2-lab-agent": 38
   },
   "fichas": [
     {
       "nombre": "AuditorAgent",
       "proyecto": "ci2-lab-agent",
-      "que_hace": "por confirmar",
+      "que_hace": "Agente orquestador que coordina el análisis completo de un proyecto: instancia y ejecuta ScannerAgent, DependencyAgent, DocumentationAgent, InventoryAgent y ReportAgent en secuencia, produciendo un ProjectInventory completo y escribiendo los resultados en outputs/.",
       "donde_vive": "src/ci2_lab/agents/auditor_agent.py :: class AuditorAgent",
       "stack": "Python >=3.10",
       "entrada_salida": "Clase. Métodos públicos: scan, print_summary",
@@ -22,7 +22,7 @@
     {
       "nombre": "AuditorAgent.print_summary",
       "proyecto": "ci2-lab-agent",
-      "que_hace": "por confirmar",
+      "que_hace": "Imprime por consola un resumen legible del inventario: ruta del proyecto, lenguajes detectados, herramientas, presencia de README, número total de ficheros por categoría y lista de advertencias si las hay.",
       "donde_vive": "src/ci2_lab/agents/auditor_agent.py :: AuditorAgent.print_summary",
       "stack": "Python >=3.10",
       "entrada_salida": "Entrada: (inventory: ProjectInventory, files: dict[str, list[str]] | None = None) → None",
@@ -36,7 +36,7 @@
     {
       "nombre": "AuditorAgent.scan",
       "proyecto": "ci2-lab-agent",
-      "que_hace": "por confirmar",
+      "que_hace": "Valida la ruta del proyecto, coordina los agentes especializados y construye un ProjectInventory con lenguajes, herramientas, dependencias y documentación detectados. Escribe inventory.json y report.md en outputs/ y muestra el resumen por consola. Devuelve el ProjectInventory resultante.",
       "donde_vive": "src/ci2_lab/agents/auditor_agent.py :: AuditorAgent.scan",
       "stack": "Python >=3.10",
       "entrada_salida": "Entrada: (project_path: str | Path) → ProjectInventory",
@@ -49,7 +49,7 @@
     {
       "nombre": "AuditResult",
       "proyecto": "ci2-lab-agent",
-      "que_hace": "por confirmar",
+      "que_hace": "Dataclass que recoge el resultado de una auditoría: flag de validez booleano, lista de errores bloqueantes, lista de advertencias y lista de campos que fueron corregidos automáticamente.",
       "donde_vive": "src/ci2_lab/models.py :: class AuditResult",
       "stack": "Python >=3.10",
       "entrada_salida": "Clase (dataclass)",
@@ -63,11 +63,11 @@
     {
       "nombre": "build_parser",
       "proyecto": "ci2-lab-agent",
-      "que_hace": "por confirmar",
+      "que_hace": "Construye y devuelve el parser CLI de la herramienta ci2-lab con el subcomando scan, que acepta una ruta de directorio local o una URL de GitHub como argumento posicional.",
       "donde_vive": "src/ci2_lab/main.py :: build_parser",
       "stack": "Python >=3.10",
       "entrada_salida": "Entrada: (—) → argparse.ArgumentParser",
-      "mantiene": "carlacortes27",
+      "mantiene": "jpuentesanchezz03-byte",
       "etiquetas": [
         "build",
         "parser"
@@ -75,9 +75,24 @@
       "_ficha_path": "fichas/ci2-lab-agent/build_parser.json"
     },
     {
+      "nombre": "clone_github_repo",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "Clona un repositorio de GitHub con git clone --depth 1 en un directorio temporal creado con tempfile. Devuelve la ruta local del repositorio clonado y su nombre. Lanza GitHubCloneError si la URL no es válida, git no está instalado o la clonación falla; limpia el directorio temporal en caso de error.",
+      "donde_vive": "src/ci2_lab/utils.py :: clone_github_repo",
+      "stack": "Python >=3.10, shutil, tempfile, urllib",
+      "entrada_salida": "Entrada: (url: str) → tuple[str, str]",
+      "mantiene": "jpuentesanchezz03-byte",
+      "etiquetas": [
+        "clone",
+        "github",
+        "repo"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/clone_github_repo.json"
+    },
+    {
       "nombre": "collect_signals",
       "proyecto": "ci2-lab-agent",
-      "que_hace": "por confirmar",
+      "que_hace": "Recorre los ficheros de un proyecto y recoge evidencias de que es una herramienta reutilizable: detecta entrypoints conocidos (main.py, train.py, etc.), ficheros de dependencias, carpetas especiales (docs/, tests/, etc.), scripts SLURM (.sbatch) y notebooks. Devuelve dos listas: rutas fuente y textos de evidencia.",
       "donde_vive": "scripts/inventory_phase1.py :: collect_signals",
       "stack": "Python >=3.10, shutil",
       "entrada_salida": "Entrada: (project_dir: Path) → tuple[list[str], list[str]]",
@@ -89,9 +104,36 @@
       "_ficha_path": "fichas/ci2-lab-agent/collect_signals.json"
     },
     {
+      "nombre": "DependencyAgent",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "Agente que analiza los ficheros de dependencias de un proyecto (requirements.txt, pyproject.toml, package.json) y extrae la lista de paquetes Python y Node junto con los gestores de paquetes presentes.",
+      "donde_vive": "src/ci2_lab/agents/dependency_agent.py :: class DependencyAgent",
+      "stack": "Python >=3.10",
+      "entrada_salida": "Clase. Métodos públicos: analyze",
+      "mantiene": "carlacortes27",
+      "etiquetas": [
+        "dependency",
+        "agent"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/dependencyagent.json"
+    },
+    {
+      "nombre": "DependencyAgent.analyze",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "Lee los ficheros de dependencias presentes en el ScanResult y devuelve un diccionario con los gestores de paquetes detectados (pip, npm, Python packaging) y las listas de dependencias Python y Node (dependencias de producción y de desarrollo por separado).",
+      "donde_vive": "src/ci2_lab/agents/dependency_agent.py :: DependencyAgent.analyze",
+      "stack": "Python >=3.10",
+      "entrada_salida": "Entrada: (project_path: str | Path, scan_result: ScanResult) → dict",
+      "mantiene": "carlacortes27",
+      "etiquetas": [
+        "analyze"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/dependencyagent_analyze.json"
+    },
+    {
       "nombre": "detect_candidate",
       "proyecto": "ci2-lab-agent",
-      "que_hace": "por confirmar",
+      "que_hace": "Orquesta la detección completa de un candidato a herramienta: recoge evidencias con collect_signals, calcula la confianza (medium si <5 evidencias, high si ≥5) y construye un ToolCandidate. Devuelve None si hay menos de 2 evidencias (proyecto insuficiente).",
       "donde_vive": "scripts/inventory_phase1.py :: detect_candidate",
       "stack": "Python >=3.10, shutil",
       "entrada_salida": "Entrada: (project_dir: Path) → ToolCandidate | None",
@@ -105,7 +147,7 @@
     {
       "nombre": "detect_projects",
       "proyecto": "ci2-lab-agent",
-      "que_hace": "por confirmar",
+      "que_hace": "Devuelve la lista de directorios de proyectos a analizar: si se pasa un argumento concreto resuelve esa ruta y la devuelve; si no, devuelve todos los subdirectorios de projects/raw/ ordenados alfabéticamente.",
       "donde_vive": "scripts/inventory_phase1.py :: detect_projects",
       "stack": "Python >=3.10, shutil",
       "entrada_salida": "Entrada: (project_arg: str | None) → list[Path]",
@@ -117,9 +159,36 @@
       "_ficha_path": "fichas/ci2-lab-agent/detect_projects.json"
     },
     {
+      "nombre": "DocumentationAgent",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "Agente que analiza la documentación de un proyecto: localiza el README (md o rst), comprueba si existe carpeta docs/ y verifica la presencia de las secciones estándar installation, usage y examples, con soporte para títulos en español e inglés.",
+      "donde_vive": "src/ci2_lab/agents/documentation_agent.py :: class DocumentationAgent",
+      "stack": "Python >=3.10, unicodedata",
+      "entrada_salida": "Clase. Métodos públicos: analyze",
+      "mantiene": "carlacortes27",
+      "etiquetas": [
+        "documentation",
+        "agent"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/documentationagent.json"
+    },
+    {
+      "nombre": "DocumentationAgent.analyze",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "Localiza el README del proyecto, detecta si existe carpeta docs/ y comprueba qué secciones estándar (installation, usage, examples) contiene el README. Devuelve un diccionario con flags booleanos por sección y la lista de secciones ausentes.",
+      "donde_vive": "src/ci2_lab/agents/documentation_agent.py :: DocumentationAgent.analyze",
+      "stack": "Python >=3.10, unicodedata",
+      "entrada_salida": "Entrada: (project_path: str | Path, scan_result: ScanResult | None = None) → dict",
+      "mantiene": "carlacortes27",
+      "etiquetas": [
+        "analyze"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/documentationagent_analyze.json"
+    },
+    {
       "nombre": "ensure_structure",
       "proyecto": "ci2-lab-agent",
-      "que_hace": "por confirmar",
+      "que_hace": "Crea la estructura de directorios necesaria para el inventario si no existe: projects/raw, inventory/tools, inventory/capabilities, inventory/index, inventory/audit y agents.",
       "donde_vive": "scripts/inventory_phase1.py :: ensure_structure",
       "stack": "Python >=3.10, shutil",
       "entrada_salida": "Entrada: (—) → None",
@@ -131,9 +200,24 @@
       "_ficha_path": "fichas/ci2-lab-agent/ensure_structure.json"
     },
     {
+      "nombre": "GitHubCloneError",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "Excepción personalizada (hereda de RuntimeError) que se lanza cuando falla la validación o la clonación de un repositorio de GitHub (URL inválida, git no instalado o fallo de red).",
+      "donde_vive": "src/ci2_lab/utils.py :: class GitHubCloneError",
+      "stack": "Python >=3.10, shutil, tempfile, urllib",
+      "entrada_salida": "Clase. Métodos públicos: —",
+      "mantiene": "jpuentesanchezz03-byte",
+      "etiquetas": [
+        "git",
+        "hub",
+        "clone"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/githubcloneerror.json"
+    },
+    {
       "nombre": "infer_name",
       "proyecto": "ci2-lab-agent",
-      "que_hace": "por confirmar",
+      "que_hace": "Infiere el nombre legible de una herramienta a partir de sus rutas fuente: prioriza el nombre del fichero de entrada principal (main.py, train.py, etc.) y si no lo encuentra, usa el nombre del directorio del proyecto, convirtiendo guiones y guiones bajos en espacios y aplicando Title Case.",
       "donde_vive": "scripts/inventory_phase1.py :: infer_name",
       "stack": "Python >=3.10, shutil",
       "entrada_salida": "Entrada: (project_dir: Path, source_paths: list[str]) → str",
@@ -145,9 +229,50 @@
       "_ficha_path": "fichas/ci2-lab-agent/infer_name.json"
     },
     {
+      "nombre": "InventoryAgent",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "Agente que serializa un ProjectInventory completo a un fichero JSON inventory.json en el directorio de salida indicado.",
+      "donde_vive": "src/ci2_lab/agents/inventory_agent.py :: class InventoryAgent",
+      "stack": "Python >=3.10",
+      "entrada_salida": "Clase. Métodos públicos: save",
+      "mantiene": "carlacortes27",
+      "etiquetas": [
+        "inventory",
+        "agent"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/inventoryagent.json"
+    },
+    {
+      "nombre": "InventoryAgent.save",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "Serializa el ProjectInventory recibido como JSON con indentación de 2 espacios y lo escribe en <output_dir>/inventory.json (por defecto outputs/). Crea el directorio si no existe. Devuelve la ruta del fichero generado.",
+      "donde_vive": "src/ci2_lab/agents/inventory_agent.py :: InventoryAgent.save",
+      "stack": "Python >=3.10",
+      "entrada_salida": "Entrada: (inventory: ProjectInventory, output_dir: str | Path = 'outputs') → Path",
+      "mantiene": "carlacortes27",
+      "etiquetas": [
+        "save"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/inventoryagent_save.json"
+    },
+    {
+      "nombre": "is_github_url",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "Comprueba si una cadena de texto es una URL HTTPS válida de GitHub (esquema https y host exactamente github.com). Devuelve True o False.",
+      "donde_vive": "src/ci2_lab/utils.py :: is_github_url",
+      "stack": "Python >=3.10, shutil, tempfile, urllib",
+      "entrada_salida": "Entrada: (input_value: str) → bool",
+      "mantiene": "jpuentesanchezz03-byte",
+      "etiquetas": [
+        "github",
+        "url"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/is_github_url.json"
+    },
+    {
       "nombre": "iter_project_files",
       "proyecto": "ci2-lab-agent",
-      "que_hace": "por confirmar",
+      "que_hace": "Generador que recorre recursivamente todos los ficheros de un directorio de proyecto usando rglob, excluyendo cualquier ruta que contenga el directorio .git.",
       "donde_vive": "scripts/inventory_phase1.py :: iter_project_files",
       "stack": "Python >=3.10, shutil",
       "entrada_salida": "Entrada: (project_dir: Path) → Iterable[Path]",
@@ -162,7 +287,7 @@
     {
       "nombre": "main",
       "proyecto": "ci2-lab-agent",
-      "que_hace": "por confirmar",
+      "que_hace": "Punto de entrada CLI del inventariador Phase 1. Parsea --project (proyecto concreto) y --clean (borrar tools previos), asegura la estructura de directorios, detecta proyectos, genera un ToolCandidate por cada uno y escribe los manifiestos y el índice global.",
       "donde_vive": "scripts/inventory_phase1.py :: main",
       "stack": "Python >=3.10, shutil",
       "entrada_salida": "Entrada: (—) → int",
@@ -175,11 +300,11 @@
     {
       "nombre": "main",
       "proyecto": "ci2-lab-agent",
-      "que_hace": "por confirmar",
+      "que_hace": "Punto de entrada CLI de ci2-lab. Parsea los argumentos, clona el repositorio si el input es una URL de GitHub (limpiando el directorio temporal al salir), ejecuta AuditorAgent.scan y devuelve código 0 si el inventario es válido o 1 si hay errores.",
       "donde_vive": "src/ci2_lab/main.py :: main",
       "stack": "Python >=3.10",
       "entrada_salida": "Entrada: (—) → int",
-      "mantiene": "carlacortes27",
+      "mantiene": "jpuentesanchezz03-byte",
       "etiquetas": [
         "main"
       ],
@@ -188,7 +313,7 @@
     {
       "nombre": "now_iso",
       "proyecto": "ci2-lab-agent",
-      "que_hace": "por confirmar",
+      "que_hace": "Devuelve la fecha y hora actual en formato ISO 8601 UTC sin microsegundos (p.ej. '2025-06-04T10:30:00+00:00'), para usar como timestamp en los manifiestos tool.yaml generados.",
       "donde_vive": "scripts/inventory_phase1.py :: now_iso",
       "stack": "Python >=3.10, shutil",
       "entrada_salida": "Entrada: (—) → str",
@@ -202,7 +327,7 @@
     {
       "nombre": "ProjectInventory",
       "proyecto": "ci2-lab-agent",
-      "que_hace": "por confirmar",
+      "que_hace": "Dataclass central que agrega el inventario completo de un proyecto: lenguajes detectados, gestores de paquetes, dependencias (Python y Node), herramientas, frameworks, scripts, estado de documentación y resultado de auditoría.",
       "donde_vive": "src/ci2_lab/models.py :: class ProjectInventory",
       "stack": "Python >=3.10",
       "entrada_salida": "Clase (dataclass)",
@@ -214,9 +339,24 @@
       "_ficha_path": "fichas/ci2-lab-agent/projectinventory.json"
     },
     {
+      "nombre": "remove_temporary_directory",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "Elimina de forma segura un directorio temporal (creado por clone_github_repo) usando shutil.rmtree con ignore_errors=True. Es un no-op si la ruta es None o ya no existe.",
+      "donde_vive": "src/ci2_lab/utils.py :: remove_temporary_directory",
+      "stack": "Python >=3.10, shutil, tempfile, urllib",
+      "entrada_salida": "Entrada: (path: str | Path | None) → None",
+      "mantiene": "jpuentesanchezz03-byte",
+      "etiquetas": [
+        "remove",
+        "temporary",
+        "directory"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/remove_temporary_directory.json"
+    },
+    {
       "nombre": "render_tool_readme",
       "proyecto": "ci2-lab-agent",
-      "que_hace": "por confirmar",
+      "que_hace": "Genera el contenido del fichero README.md de un ToolCandidate con secciones estándar: descripción, capacidades, entradas, salidas, dependencias, modo de ejecución, ejemplo de uso, evidencias usadas y estado de documentación. Los campos sin información se marcan como pendientes.",
       "donde_vive": "scripts/inventory_phase1.py :: render_tool_readme",
       "stack": "Python >=3.10, shutil",
       "entrada_salida": "Entrada: (candidate: ToolCandidate) → str",
@@ -231,7 +371,7 @@
     {
       "nombre": "render_tool_yaml",
       "proyecto": "ci2-lab-agent",
-      "que_hace": "por confirmar",
+      "que_hace": "Genera el contenido del fichero tool.yaml para un ToolCandidate, con todos los campos del manifiesto estándar: id, nombre, descripción, proyecto origen, rutas fuente, categoría, capacidades con evidencias, lenguajes, dependencias, modo de ejecución, entradas/salidas y metadatos de auditoría.",
       "donde_vive": "scripts/inventory_phase1.py :: render_tool_yaml",
       "stack": "Python >=3.10, shutil",
       "entrada_salida": "Entrada: (candidate: ToolCandidate) → str",
@@ -244,13 +384,40 @@
       "_ficha_path": "fichas/ci2-lab-agent/render_tool_yaml.json"
     },
     {
+      "nombre": "ReportAgent",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "Agente que genera un informe legible en Markdown a partir de un ProjectInventory, resumiendo lenguajes detectados, herramientas, estado del README y listando errores y advertencias de la auditoría.",
+      "donde_vive": "src/ci2_lab/agents/report_agent.py :: class ReportAgent",
+      "stack": "Python >=3.10",
+      "entrada_salida": "Clase. Métodos públicos: save",
+      "mantiene": "carlacortes27",
+      "etiquetas": [
+        "report",
+        "agent"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/reportagent.json"
+    },
+    {
+      "nombre": "ReportAgent.save",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "Construye el informe Markdown del proyecto y lo escribe en <output_dir>/report.md (por defecto outputs/). Crea el directorio si no existe. Devuelve la ruta del fichero generado.",
+      "donde_vive": "src/ci2_lab/agents/report_agent.py :: ReportAgent.save",
+      "stack": "Python >=3.10",
+      "entrada_salida": "Entrada: (inventory: ProjectInventory, output_dir: str | Path = 'outputs') → Path",
+      "mantiene": "carlacortes27",
+      "etiquetas": [
+        "save"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/reportagent_save.json"
+    },
+    {
       "nombre": "ScannerAgent",
       "proyecto": "ci2-lab-agent",
-      "que_hace": "por confirmar",
+      "que_hace": "Agente que recorre recursivamente un directorio de proyecto y clasifica cada fichero por tipo (python, dependencias, docker, scripts, documentación, notebooks, config), ignorando carpetas de sistema (.git, .venv, node_modules, etc.). Devuelve un ScanResult con el mapa completo de ficheros por categoría.",
       "donde_vive": "src/ci2_lab/agents/scanner_agent.py :: class ScannerAgent",
       "stack": "Python >=3.10",
       "entrada_salida": "Clase. Métodos públicos: scan",
-      "mantiene": "carlacortes27",
+      "mantiene": "jpuentesanchezz03-byte",
       "etiquetas": [
         "scanner",
         "agent"
@@ -260,11 +427,11 @@
     {
       "nombre": "ScannerAgent.scan",
       "proyecto": "ci2-lab-agent",
-      "que_hace": "por confirmar",
+      "que_hace": "Recorre el directorio raíz del proyecto, ignora carpetas de sistema y clasifica todos los ficheros encontrados. Devuelve un ScanResult con el nombre del proyecto, su ruta y el mapa de ficheros agrupados por categoría.",
       "donde_vive": "src/ci2_lab/agents/scanner_agent.py :: ScannerAgent.scan",
       "stack": "Python >=3.10",
       "entrada_salida": "Entrada: (project_path: str | Path) → ScanResult",
-      "mantiene": "carlacortes27",
+      "mantiene": "jpuentesanchezz03-byte",
       "etiquetas": [
         "scan"
       ],
@@ -273,7 +440,7 @@
     {
       "nombre": "ScanResult",
       "proyecto": "ci2-lab-agent",
-      "que_hace": "por confirmar",
+      "que_hace": "Dataclass que almacena el resultado de un escaneo de proyecto: nombre del proyecto, ruta absoluta y un mapa de ficheros clasificados por categoría (python, dependencias, docker, scripts, documentación, notebooks, config).",
       "donde_vive": "src/ci2_lab/models.py :: class ScanResult",
       "stack": "Python >=3.10",
       "entrada_salida": "Clase (dataclass)",
@@ -287,7 +454,7 @@
     {
       "nombre": "slugify",
       "proyecto": "ci2-lab-agent",
-      "que_hace": "por confirmar",
+      "que_hace": "Convierte una cadena arbitraria en un slug válido para usar como identificador de herramienta: pasa a minúsculas, sustituye caracteres no alfanuméricos por guiones bajos y elimina guiones bajos iniciales/finales.",
       "donde_vive": "scripts/inventory_phase1.py :: slugify",
       "stack": "Python >=3.10, shutil",
       "entrada_salida": "Entrada: (value: str) → str",
@@ -300,7 +467,7 @@
     {
       "nombre": "ToolCandidate",
       "proyecto": "ci2-lab-agent",
-      "que_hace": "por confirmar",
+      "que_hace": "Dataclass que representa un candidato a herramienta reutilizable detectado en un proyecto: identificador slug, nombre legible, proyecto de origen, rutas fuente, lista de evidencias encontradas, descripción breve, nivel de confianza (medium/high) y estado del registro.",
       "donde_vive": "scripts/inventory_phase1.py :: class ToolCandidate",
       "stack": "Python >=3.10, shutil",
       "entrada_salida": "Clase (dataclass)",
@@ -312,9 +479,36 @@
       "_ficha_path": "fichas/ci2-lab-agent/toolcandidate.json"
     },
     {
+      "nombre": "ToolsAgent",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "Agente que detecta herramientas de desarrollo (Docker, Docker Compose, Make, GitHub Actions, GitLab CI, Jupyter) y frameworks (FastAPI, Flask, Django, React, Vue, Angular, Express, Vite) presentes en un proyecto analizando sus ficheros de configuración y manifiestos de dependencias.",
+      "donde_vive": "src/ci2_lab/agents/tools_agent.py :: class ToolsAgent",
+      "stack": "Python >=3.10, tomllib",
+      "entrada_salida": "Clase. Métodos públicos: detect",
+      "mantiene": "jpuentesanchezz03-byte",
+      "etiquetas": [
+        "tools",
+        "agent"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/toolsagent.json"
+    },
+    {
+      "nombre": "ToolsAgent.detect",
+      "proyecto": "ci2-lab-agent",
+      "que_hace": "Analiza los ficheros del proyecto (Dockerfile, Makefile, .github/workflows/, requirements.txt, pyproject.toml, package.json) y devuelve dos listas ordenadas: herramientas de infraestructura detectadas y frameworks detectados.",
+      "donde_vive": "src/ci2_lab/agents/tools_agent.py :: ToolsAgent.detect",
+      "stack": "Python >=3.10, tomllib",
+      "entrada_salida": "Entrada: (project_path: str | Path, files: dict[str, list[str]]) → tuple[list[str], list[str]]",
+      "mantiene": "jpuentesanchezz03-byte",
+      "etiquetas": [
+        "detect"
+      ],
+      "_ficha_path": "fichas/ci2-lab-agent/toolsagent_detect.json"
+    },
+    {
       "nombre": "write_tool",
       "proyecto": "ci2-lab-agent",
-      "que_hace": "por confirmar",
+      "que_hace": "Escribe en disco la estructura completa de un tool detectado: crea el directorio inventory/tools/<tool_id>/ con subdirectorios source/, docs/, examples/ y tests/, y escribe los ficheros tool.yaml, README.md y un marcador SOURCE_PROJECT.txt. Devuelve el entry dict para el índice global.",
       "donde_vive": "scripts/inventory_phase1.py :: write_tool",
       "stack": "Python >=3.10, shutil",
       "entrada_salida": "Entrada: (candidate: ToolCandidate, project_dir: Path) → dict",
@@ -328,7 +522,7 @@
     {
       "nombre": "write_tools_index",
       "proyecto": "ci2-lab-agent",
-      "que_hace": "por confirmar",
+      "que_hace": "Escribe el fichero inventory/index/tools_index.json con la lista completa de tools detectados en la ejecución actual, serializada como JSON con indentación de 2 espacios.",
       "donde_vive": "scripts/inventory_phase1.py :: write_tools_index",
       "stack": "Python >=3.10, shutil",
       "entrada_salida": "Entrada: (entries: list[dict]) → None",

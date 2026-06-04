@@ -1,7 +1,7 @@
 {
   "nombre": "iter_project_files",
   "proyecto": "ci2-lab-agent",
-  "que_hace": "por confirmar",
+  "que_hace": "Generador que recorre recursivamente todos los ficheros de un directorio de proyecto usando rglob, excluyendo cualquier ruta que contenga el directorio .git.",
   "donde_vive": "scripts/inventory_phase1.py :: iter_project_files",
   "stack": "Python >=3.10, shutil",
   "entrada_salida": "Entrada: (project_dir: Path) → Iterable[Path]",

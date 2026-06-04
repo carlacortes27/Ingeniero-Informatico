@@ -1,0 +1,12 @@
+{
+  "nombre": "ReportAgent.save",
+  "proyecto": "ci2-lab-agent",
+  "que_hace": "Construye el informe Markdown del proyecto y lo escribe en <output_dir>/report.md (por defecto outputs/). Crea el directorio si no existe. Devuelve la ruta del fichero generado.",
+  "donde_vive": "src/ci2_lab/agents/report_agent.py :: ReportAgent.save",
+  "stack": "Python >=3.10",
+  "entrada_salida": "Entrada: (inventory: ProjectInventory, output_dir: str | Path = 'outputs') → Path",
+  "mantiene": "carlacortes27",
+  "etiquetas": [
+    "save"
+  ]
+}

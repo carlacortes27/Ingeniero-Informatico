@@ -1,0 +1,12 @@
+{
+  "nombre": "InventoryAgent.save",
+  "proyecto": "ci2-lab-agent",
+  "que_hace": "Serializa el ProjectInventory recibido como JSON con indentación de 2 espacios y lo escribe en <output_dir>/inventory.json (por defecto outputs/). Crea el directorio si no existe. Devuelve la ruta del fichero generado.",
+  "donde_vive": "src/ci2_lab/agents/inventory_agent.py :: InventoryAgent.save",
+  "stack": "Python >=3.10",
+  "entrada_salida": "Entrada: (inventory: ProjectInventory, output_dir: str | Path = 'outputs') → Path",
+  "mantiene": "carlacortes27",
+  "etiquetas": [
+    "save"
+  ]
+}

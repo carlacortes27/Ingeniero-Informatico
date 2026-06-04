@@ -1,7 +1,7 @@
 {
   "nombre": "render_tool_readme",
   "proyecto": "ci2-lab-agent",
-  "que_hace": "por confirmar",
+  "que_hace": "Genera el contenido del fichero README.md de un ToolCandidate con secciones estándar: descripción, capacidades, entradas, salidas, dependencias, modo de ejecución, ejemplo de uso, evidencias usadas y estado de documentación. Los campos sin información se marcan como pendientes.",
   "donde_vive": "scripts/inventory_phase1.py :: render_tool_readme",
   "stack": "Python >=3.10, shutil",
   "entrada_salida": "Entrada: (candidate: ToolCandidate) → str",

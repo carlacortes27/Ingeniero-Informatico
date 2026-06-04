@@ -1,7 +1,7 @@
 {
   "nombre": "now_iso",
   "proyecto": "ci2-lab-agent",
-  "que_hace": "por confirmar",
+  "que_hace": "Devuelve la fecha y hora actual en formato ISO 8601 UTC sin microsegundos (p.ej. '2025-06-04T10:30:00+00:00'), para usar como timestamp en los manifiestos tool.yaml generados.",
   "donde_vive": "scripts/inventory_phase1.py :: now_iso",
   "stack": "Python >=3.10, shutil",
   "entrada_salida": "Entrada: (—) → str",

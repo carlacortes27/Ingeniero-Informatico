@@ -1,7 +1,7 @@
 {
   "nombre": "AuditorAgent",
   "proyecto": "ci2-lab-agent",
-  "que_hace": "por confirmar",
+  "que_hace": "Agente orquestador que coordina el análisis completo de un proyecto: instancia y ejecuta ScannerAgent, DependencyAgent, DocumentationAgent, InventoryAgent y ReportAgent en secuencia, produciendo un ProjectInventory completo y escribiendo los resultados en outputs/.",
   "donde_vive": "src/ci2_lab/agents/auditor_agent.py :: class AuditorAgent",
   "stack": "Python >=3.10",
   "entrada_salida": "Clase. Métodos públicos: scan, print_summary",

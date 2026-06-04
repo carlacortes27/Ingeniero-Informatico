@@ -5,6 +5,11 @@
     "fichero": "src/ci2_lab/agents/auditor_agent.py"
   },
   {
+    "nombre": "_write_outputs",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/auditor_agent.py"
+  },
+  {
     "nombre": "_detect_languages",
     "razon": "símbolo privado",
     "fichero": "src/ci2_lab/agents/auditor_agent.py"
@@ -20,6 +25,71 @@
     "fichero": "src/ci2_lab/agents/auditor_agent.py"
   },
   {
+    "nombre": "_find_file",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/dependency_agent.py"
+  },
+  {
+    "nombre": "_has_file",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/dependency_agent.py"
+  },
+  {
+    "nombre": "_read_requirements",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/dependency_agent.py"
+  },
+  {
+    "nombre": "_parse_requirement_line",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/dependency_agent.py"
+  },
+  {
+    "nombre": "_read_package_json",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/dependency_agent.py"
+  },
+  {
+    "nombre": "_dependency_names",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/dependency_agent.py"
+  },
+  {
+    "nombre": "_read_text",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/dependency_agent.py"
+  },
+  {
+    "nombre": "__init__",
+    "razon": "método especial (__init__)",
+    "fichero": "src/ci2_lab/agents/documentation_agent.py"
+  },
+  {
+    "nombre": "_find_readme",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/documentation_agent.py"
+  },
+  {
+    "nombre": "_read_text",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/documentation_agent.py"
+  },
+  {
+    "nombre": "_detect_sections",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/documentation_agent.py"
+  },
+  {
+    "nombre": "_normalize",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/documentation_agent.py"
+  },
+  {
+    "nombre": "_build_report",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/report_agent.py"
+  },
+  {
     "nombre": "_walk",
     "razon": "símbolo privado",
     "fichero": "src/ci2_lab/agents/scanner_agent.py"
@@ -28,5 +98,55 @@
     "nombre": "_classify",
     "razon": "símbolo privado",
     "fichero": "src/ci2_lab/agents/scanner_agent.py"
+  },
+  {
+    "nombre": "_detect_from_files",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/tools_agent.py"
+  },
+  {
+    "nombre": "_detect_python_manifests",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/tools_agent.py"
+  },
+  {
+    "nombre": "_detect_node_manifests",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/tools_agent.py"
+  },
+  {
+    "nombre": "_add_python_matches",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/tools_agent.py"
+  },
+  {
+    "nombre": "_read_requirements",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/tools_agent.py"
+  },
+  {
+    "nombre": "_read_pyproject",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/tools_agent.py"
+  },
+  {
+    "nombre": "_read_package_json",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/tools_agent.py"
+  },
+  {
+    "nombre": "_names_from_dependency_list",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/tools_agent.py"
+  },
+  {
+    "nombre": "_normalize_requirement_name",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/agents/tools_agent.py"
+  },
+  {
+    "nombre": "_repo_name_from_url",
+    "razon": "símbolo privado",
+    "fichero": "src/ci2_lab/utils.py"
   }
 ]

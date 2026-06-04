@@ -1,7 +1,7 @@
 {
   "nombre": "collect_signals",
   "proyecto": "ci2-lab-agent",
-  "que_hace": "por confirmar",
+  "que_hace": "Recorre los ficheros de un proyecto y recoge evidencias de que es una herramienta reutilizable: detecta entrypoints conocidos (main.py, train.py, etc.), ficheros de dependencias, carpetas especiales (docs/, tests/, etc.), scripts SLURM (.sbatch) y notebooks. Devuelve dos listas: rutas fuente y textos de evidencia.",
   "donde_vive": "scripts/inventory_phase1.py :: collect_signals",
   "stack": "Python >=3.10, shutil",
   "entrada_salida": "Entrada: (project_dir: Path) → tuple[list[str], list[str]]",

@@ -1,7 +1,7 @@
 {
   "nombre": "render_tool_yaml",
   "proyecto": "ci2-lab-agent",
-  "que_hace": "por confirmar",
+  "que_hace": "Genera el contenido del fichero tool.yaml para un ToolCandidate, con todos los campos del manifiesto estándar: id, nombre, descripción, proyecto origen, rutas fuente, categoría, capacidades con evidencias, lenguajes, dependencias, modo de ejecución, entradas/salidas y metadatos de auditoría.",
   "donde_vive": "scripts/inventory_phase1.py :: render_tool_yaml",
   "stack": "Python >=3.10, shutil",
   "entrada_salida": "Entrada: (candidate: ToolCandidate) → str",
