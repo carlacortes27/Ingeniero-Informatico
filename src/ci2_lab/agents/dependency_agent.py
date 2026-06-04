@@ -12,8 +12,10 @@ class DependencyAgent:
         files = scan_result.files
 
         python_dependencies: list[str] = []
+        python_tool_configs: list[str] = []
         node_dependencies: list[str] = []
         node_dev_dependencies: list[str] = []
+        node_peer_dependencies: list[str] = []
         package_managers: list[str] = []
 
         requirements_path = self._find_file(
@@ -33,7 +35,9 @@ class DependencyAgent:
                 "pyproject.toml",
             )
             if pyproject_path:
-                python_dependencies.extend(self._read_pyproject(pyproject_path))
+                pyproject_result = self._read_pyproject(pyproject_path)
+                python_dependencies.extend(pyproject_result["dependencies"])
+                python_tool_configs.extend(pyproject_result["tool_configs"])
 
         dependency_files = files.get("dependencies", [])
         lock_files = files.get("locks", [])
@@ -54,7 +58,11 @@ class DependencyAgent:
         package_json_path = self._find_file(root, files.get("node", []), "package.json")
         if package_json_path:
             package_managers.append("npm")
-            node_dependencies, node_dev_dependencies = self._read_package_json(package_json_path)
+            (
+                node_dependencies,
+                node_dev_dependencies,
+                node_peer_dependencies,
+            ) = self._read_package_json(package_json_path)
 
         return {
             "package_managers": sorted(set(package_managers)),
@@ -65,6 +73,10 @@ class DependencyAgent:
                     "devDependencies": node_dev_dependencies,
                 },
                 "system": [],
+            },
+            "metadata": {
+                "python_tool_configs": sorted(set(python_tool_configs)),
+                "node_peerDependencies": node_peer_dependencies,
             },
         }
 
@@ -92,13 +104,14 @@ class DependencyAgent:
 
         return sorted(set(dependencies))
 
-    def _read_pyproject(self, path: Path) -> list[str]:
+    def _read_pyproject(self, path: Path) -> dict[str, list[str]]:
         try:
             data = tomllib.loads(self._read_text(path))
         except tomllib.TOMLDecodeError:
-            return []
+            return {"dependencies": [], "tool_configs": []}
 
         dependencies: list[str] = []
+        tool_configs: list[str] = []
         project = data.get("project", {})
         if isinstance(project, dict):
             dependencies.extend(self._dependency_list(project.get("dependencies")))
@@ -108,6 +121,9 @@ class DependencyAgent:
                     dependencies.extend(self._dependency_list(values))
 
         tool = data.get("tool", {})
+        if isinstance(tool, dict):
+            tool_configs.extend(str(name) for name in tool)
+
         poetry = tool.get("poetry", {}) if isinstance(tool, dict) else {}
         if isinstance(poetry, dict):
             for section in ("dependencies", "dev-dependencies", "group"):
@@ -121,11 +137,14 @@ class DependencyAgent:
                 else:
                     dependencies.extend(self._dependency_names(values))
 
-        return sorted(
-            dependency
-            for dependency in set(dependencies)
-            if dependency.lower() != "python"
-        )
+        return {
+            "dependencies": sorted(
+                dependency
+                for dependency in set(dependencies)
+                if dependency.lower() != "python"
+            ),
+            "tool_configs": sorted(set(tool_configs)),
+        }
 
     def _dependency_list(self, value: object) -> list[str]:
         if not isinstance(value, list):
@@ -155,16 +174,17 @@ class DependencyAgent:
 
         return cleaned or None
 
-    def _read_package_json(self, path: Path) -> tuple[list[str], list[str]]:
+    def _read_package_json(self, path: Path) -> tuple[list[str], list[str], list[str]]:
         try:
             data = json.loads(self._read_text(path))
         except json.JSONDecodeError:
-            return [], []
+            return [], [], []
 
         dependencies = self._dependency_names(data.get("dependencies"))
         dev_dependencies = self._dependency_names(data.get("devDependencies"))
+        peer_dependencies = self._dependency_names(data.get("peerDependencies"))
 
-        return dependencies, dev_dependencies
+        return dependencies, dev_dependencies, peer_dependencies
 
     def _dependency_names(self, value: object) -> list[str]:
         if not isinstance(value, dict):

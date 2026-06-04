@@ -1,18 +1,26 @@
 {
-  "project_name": "repo_prueba",
-  "project_path": "C:\\Users\\carla\\OneDrive\\Escritorio\\CI2 Lab Reto 10\\Ingeniero-Informatico\\examples\\repo_prueba",
+  "project_name": "fastapi-template",
+  "project_path": "C:\\Users\\carla\\AppData\\Local\\Temp\\ci2-lab-n33bn378\\fastapi-template",
   "languages": [
     "Bash",
-    "Python"
+    "Python",
+    "YAML"
   ],
   "package_managers": [
-    "pip"
+    "Python packaging",
+    "poetry"
   ],
   "dependencies": {
     "python": [
-      "numpy",
-      "pandas",
-      "scikit-learn"
+      "SQLAlchemy",
+      "alembic",
+      "fastapi",
+      "httpx",
+      "pre-commit",
+      "psycopg2-binary",
+      "pytest",
+      "requests",
+      "uvicorn"
     ],
     "node": {
       "dependencies": [],
@@ -21,34 +29,48 @@
     "system": []
   },
   "tools": [
-    "Docker"
+    "Docker",
+    "Docker Compose",
+    "GitHub Actions",
+    "Make",
+    "black",
+    "pytest",
+    "ruff"
   ],
-  "frameworks": [],
+  "frameworks": [
+    "FastAPI"
+  ],
   "scripts": [
     {
-      "path": "run.sh",
-      "type": "shell",
-      "commands": []
+      "path": "Makefile",
+      "type": "makefile",
+      "commands": [
+        "up: docker compose up -d --build api",
+        "utest: $(ci-compose) run --rm unit pytest -m unit .",
+        "itest: $(ci-compose) run --rm integration pytest -m integration .",
+        "check: $(ci-compose) run --rm unit pre-commit run -a",
+        "cleantest: $(ci-compose) kill",
+        "cleantest: $(ci-compose) down --remove-orphans",
+        "cleantest: $(ci-compose) build",
+        "migrate: docker compose run --rm api alembic upgrade head",
+        "downgrade: docker compose run --rm api alembic downgrade -1",
+        "help: @awk -F '##' '/^[a-z_]+:[a-z ]+##/ { print \"\\033[34m\"$$1\"\\033[0m\" \"\\n\" $$2 }' Makefile"
+      ]
     }
   ],
   "documentation": {
     "has_readme": true,
     "has_docs_folder": false,
-    "has_installation_section": false,
-    "has_usage_section": false,
+    "has_installation_section": true,
+    "has_usage_section": true,
     "has_examples_section": false,
-    "has_tests_section": false,
-    "has_docker_section": false,
+    "has_tests_section": true,
+    "has_docker_section": true,
     "has_architecture_section": false,
-    "has_dependencies_section": false,
+    "has_dependencies_section": true,
     "missing_sections": [
-      "installation",
-      "usage",
       "examples",
-      "tests",
-      "docker",
-      "architecture",
-      "dependencies"
+      "architecture"
     ]
   },
   "audit": {

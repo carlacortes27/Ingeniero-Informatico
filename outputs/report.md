@@ -1,31 +1,39 @@
-# Informe de inventario: repo_prueba
+# Informe de inventario: fastapi-template
 
 ## Lenguajes
 
 - Bash
 - Python
+- YAML
 
 ## Herramientas
 
 - Docker
+- Docker Compose
+- GitHub Actions
+- Make
+- black
+- pytest
+- ruff
 
 ## Frameworks
 
-- No detectados
+- FastAPI
 
 ## Gestores de paquetes
 
-- pip
+- Python packaging
+- poetry
 
 ## Dependencias
 
 - node: Ninguna
-- python: numpy, pandas, scikit-learn
+- python: SQLAlchemy, alembic, fastapi, httpx, pre-commit, psycopg2-binary, pytest, requests, uvicorn
 - system: Ninguna
 
 ## Scripts
 
-- run.sh
+- Makefile
 
 ## Documentacion
 

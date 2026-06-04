@@ -69,7 +69,7 @@ class AuditorAgent:
         documentation = self.documentation_agent.analyze(root, scan_result)
         languages = self.language_agent.detect(scan_result)
         scripts = self.scripts_agent.analyze(root, scan_result)
-        tools, frameworks = self.tools_agent.detect(root, files)
+        tools, frameworks = self.tools_agent.detect(files, dependency_result)
 
         if not documentation["has_readme"]:
             audit.warnings.append("No se ha encontrado README.md o README.rst.")
