@@ -22,9 +22,9 @@ class ProjectInventory:
     project_path: str
     languages: list[str] = field(default_factory=list)
     package_managers: list[str] = field(default_factory=list)
-    dependencies: dict[str, list[str]] = field(default_factory=dict)
+    dependencies: dict[str, object] = field(default_factory=dict)
     tools: list[str] = field(default_factory=list)
     frameworks: list[str] = field(default_factory=list)
-    scripts: list[dict] = field(default_factory=list)
-    documentation: dict = field(default_factory=dict)
-    audit: dict = field(default_factory=dict)
+    scripts: list[dict[str, object]] = field(default_factory=list)
+    documentation: dict[str, object] = field(default_factory=dict)
+    audit: dict[str, object] = field(default_factory=dict)

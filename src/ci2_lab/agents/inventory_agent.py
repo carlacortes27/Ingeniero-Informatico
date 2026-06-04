@@ -12,11 +12,11 @@ class InventoryAgent:
         output_dir: str | Path = "outputs",
     ) -> Path:
         output_path = Path(output_dir)
-        output_path.mkdir(exist_ok=True)
+        output_path.mkdir(parents=True, exist_ok=True)
 
         inventory_path = output_path / "inventory.json"
         inventory_path.write_text(
-            json.dumps(asdict(inventory), indent=2, ensure_ascii=False),
+            json.dumps(asdict(inventory), indent=2, ensure_ascii=False) + "\n",
             encoding="utf-8",
         )
 

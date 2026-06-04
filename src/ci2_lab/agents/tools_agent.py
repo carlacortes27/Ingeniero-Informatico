@@ -112,7 +112,12 @@ class ToolsAgent:
         if not path.exists():
             return packages
 
-        for line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        try:
+            text = path.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            return packages
+
+        for line in text.splitlines():
             stripped = line.split("#", 1)[0].strip()
             if not stripped or stripped.startswith(("-", "git+", "http://", "https://")):
                 continue
@@ -127,7 +132,7 @@ class ToolsAgent:
 
         try:
             data = tomllib.loads(path.read_text(encoding="utf-8"))
-        except tomllib.TOMLDecodeError:
+        except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError):
             return packages
 
         project = data.get("project", {})
@@ -158,7 +163,7 @@ class ToolsAgent:
 
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
-        except json.JSONDecodeError:
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
             return set()
 
         packages: set[str] = set()

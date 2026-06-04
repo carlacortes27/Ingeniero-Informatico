@@ -1,4 +1,5 @@
 from dataclasses import asdict
+import json
 from pathlib import Path
 
 from ci2_lab.agents.dependency_agent import DependencyAgent
@@ -6,6 +7,7 @@ from ci2_lab.agents.documentation_agent import DocumentationAgent
 from ci2_lab.agents.inventory_agent import InventoryAgent
 from ci2_lab.agents.report_agent import ReportAgent
 from ci2_lab.agents.scanner_agent import ScannerAgent
+from ci2_lab.agents.tools_agent import ToolsAgent
 from ci2_lab.models import AuditResult, ProjectInventory
 
 
@@ -15,14 +17,18 @@ class AuditorAgent:
         scanner: ScannerAgent | None = None,
         dependency_agent: DependencyAgent | None = None,
         documentation_agent: DocumentationAgent | None = None,
+        tools_agent: ToolsAgent | None = None,
         inventory_agent: InventoryAgent | None = None,
         report_agent: ReportAgent | None = None,
+        output_dir: str | Path | None = None,
     ) -> None:
         self.scanner = scanner or ScannerAgent()
         self.dependency_agent = dependency_agent or DependencyAgent()
         self.documentation_agent = documentation_agent or DocumentationAgent()
+        self.tools_agent = tools_agent or ToolsAgent()
         self.inventory_agent = inventory_agent or InventoryAgent()
         self.report_agent = report_agent or ReportAgent()
+        self.output_dir = Path(output_dir) if output_dir is not None else None
 
     def scan(self, project_path: str | Path) -> ProjectInventory:
         root = Path(project_path).resolve()
@@ -53,10 +59,9 @@ class AuditorAgent:
         scan_result = self.scanner.scan(root)
         files = scan_result.files
 
-        languages = self._detect_languages(files)
-        tools = self._detect_tools(files)
         dependency_result = self.dependency_agent.analyze(root, scan_result)
         documentation = self.documentation_agent.analyze(root, scan_result)
+        tools, frameworks = self.tools_agent.detect(root, files)
 
         if not documentation["has_readme"]:
             audit.warnings.append("No se ha encontrado README.md o README.rst.")
@@ -64,65 +69,74 @@ class AuditorAgent:
         inventory = ProjectInventory(
             project_name=scan_result.project_name,
             project_path=scan_result.project_path,
-            languages=languages,
+            languages=[],
             package_managers=dependency_result["package_managers"],
             dependencies=dependency_result["dependencies"],
             tools=tools,
-            frameworks=[],
-            scripts=[
-                {"path": path, "type": "unknown", "commands": []}
-                for path in files.get("scripts", [])
-            ],
+            frameworks=frameworks,
+            scripts=[],
             documentation=documentation,
             audit=asdict(audit),
         )
 
-        self._write_outputs(inventory)
+        self._audit_inventory(inventory, files, audit)
+        inventory.audit = asdict(audit)
+
+        if self.output_dir is not None and audit.is_valid:
+            self._write_outputs(inventory)
         self.print_summary(inventory, files)
         return inventory
 
     def _write_outputs(self, inventory: ProjectInventory) -> None:
-        output_dir = Path("outputs")
-        self.inventory_agent.save(inventory, output_dir)
-        self.report_agent.save(inventory, output_dir)
+        if self.output_dir is None:
+            return
+        self.inventory_agent.save(inventory, self.output_dir)
+        self.report_agent.save(inventory, self.output_dir)
 
-    def _detect_languages(self, files: dict[str, list[str]]) -> list[str]:
-        languages: list[str] = []
+    def _audit_inventory(
+        self,
+        inventory: ProjectInventory,
+        files: dict[str, list[str]],
+        audit: AuditResult,
+    ) -> None:
+        if not inventory.project_name:
+            audit.is_valid = False
+            audit.errors.append("Falta el nombre del proyecto.")
 
-        dependency_files = {Path(path).name for path in files.get("dependencies", [])}
+        for field_name in ("languages", "package_managers", "tools", "frameworks"):
+            values = getattr(inventory, field_name)
+            if len(values) != len(set(values)):
+                audit.is_valid = False
+                audit.errors.append(f"El campo {field_name} contiene duplicados.")
 
-        if files.get("python") or "requirements.txt" in dependency_files:
-            languages.append("Python")
-        if files.get("scripts"):
-            languages.append("Bash")
-        if files.get("notebooks"):
-            languages.append("Jupyter Notebook")
-        if files.get("node"):
-            languages.append("Node.js")
+        dependency_files = {
+            Path(path).name.lower()
+            for path in files.get("dependencies", [])
+        }
+        if "requirements.txt" in dependency_files and "pip" not in inventory.package_managers:
+            audit.warnings.append(
+                "requirements.txt encontrado, pero pip no fue detectado."
+            )
+        if files.get("node") and "npm" not in inventory.package_managers:
+            audit.warnings.append(
+                "package.json encontrado, pero npm no fue detectado."
+            )
 
-        return sorted(set(languages))
+        readme_found = any(
+            Path(path).name.lower() in {"readme.md", "readme.rst"}
+            for path in files.get("documentation", [])
+        )
+        if readme_found != bool(inventory.documentation.get("has_readme")):
+            audit.is_valid = False
+            audit.errors.append(
+                "El resultado de documentacion no coincide con los archivos escaneados."
+            )
 
-    def _detect_tools(self, files: dict[str, list[str]]) -> list[str]:
-        tools: list[str] = []
-
-        if files.get("docker"):
-            tools.append("Docker")
-
-        return sorted(set(tools))
-
-    def _detect_package_managers(self, files: dict[str, list[str]]) -> list[str]:
-        package_managers: list[str] = []
-
-        dependency_files = {Path(path).name for path in files.get("dependencies", [])}
-
-        if "requirements.txt" in dependency_files:
-            package_managers.append("pip")
-        if "pyproject.toml" in dependency_files:
-            package_managers.append("Python packaging")
-        if files.get("node"):
-            package_managers.append("npm")
-
-        return sorted(set(package_managers))
+        try:
+            json.dumps(asdict(inventory))
+        except (TypeError, ValueError):
+            audit.is_valid = False
+            audit.errors.append("El inventario no se puede serializar a JSON.")
 
     def print_summary(
         self,
@@ -146,6 +160,7 @@ class AuditorAgent:
         print(f"- Ruta: {inventory.project_path}")
         print(f"- Lenguajes: {', '.join(inventory.languages) or 'No detectados'}")
         print(f"- Herramientas: {', '.join(inventory.tools) or 'No detectadas'}")
+        print(f"- Frameworks: {', '.join(inventory.frameworks) or 'No detectados'}")
         print(f"- README: {'si' if inventory.documentation.get('has_readme') else 'no'}")
 
         if files:

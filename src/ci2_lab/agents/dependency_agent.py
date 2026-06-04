@@ -1,5 +1,7 @@
 import json
 from pathlib import Path
+import re
+import tomllib
 
 from ci2_lab.models import ScanResult
 
@@ -25,6 +27,29 @@ class DependencyAgent:
 
         if self._has_file(files.get("dependencies", []), "pyproject.toml"):
             package_managers.append("Python packaging")
+            pyproject_path = self._find_file(
+                root,
+                files.get("dependencies", []),
+                "pyproject.toml",
+            )
+            if pyproject_path:
+                python_dependencies.extend(self._read_pyproject(pyproject_path))
+
+        dependency_files = files.get("dependencies", [])
+        lock_files = files.get("locks", [])
+        if self._has_file(dependency_files, "environment.yml") or self._has_file(
+            dependency_files,
+            "environment.yaml",
+        ):
+            package_managers.append("conda")
+        if self._has_file(dependency_files, "pipfile"):
+            package_managers.append("pipenv")
+        if self._has_file(lock_files, "poetry.lock"):
+            package_managers.append("poetry")
+        if self._has_file(lock_files, "yarn.lock"):
+            package_managers.append("yarn")
+        if self._has_file(lock_files, "pnpm-lock.yaml"):
+            package_managers.append("pnpm")
 
         package_json_path = self._find_file(root, files.get("node", []), "package.json")
         if package_json_path:
@@ -34,7 +59,7 @@ class DependencyAgent:
         return {
             "package_managers": sorted(set(package_managers)),
             "dependencies": {
-                "python": python_dependencies,
+                "python": sorted(set(python_dependencies)),
                 "node": {
                     "dependencies": node_dependencies,
                     "devDependencies": node_dev_dependencies,
@@ -66,6 +91,54 @@ class DependencyAgent:
                 dependencies.append(dependency)
 
         return sorted(set(dependencies))
+
+    def _read_pyproject(self, path: Path) -> list[str]:
+        try:
+            data = tomllib.loads(self._read_text(path))
+        except tomllib.TOMLDecodeError:
+            return []
+
+        dependencies: list[str] = []
+        project = data.get("project", {})
+        if isinstance(project, dict):
+            dependencies.extend(self._dependency_list(project.get("dependencies")))
+            optional = project.get("optional-dependencies", {})
+            if isinstance(optional, dict):
+                for values in optional.values():
+                    dependencies.extend(self._dependency_list(values))
+
+        tool = data.get("tool", {})
+        poetry = tool.get("poetry", {}) if isinstance(tool, dict) else {}
+        if isinstance(poetry, dict):
+            for section in ("dependencies", "dev-dependencies", "group"):
+                values = poetry.get(section, {})
+                if section == "group" and isinstance(values, dict):
+                    for group in values.values():
+                        if isinstance(group, dict):
+                            dependencies.extend(
+                                self._dependency_names(group.get("dependencies"))
+                            )
+                else:
+                    dependencies.extend(self._dependency_names(values))
+
+        return sorted(
+            dependency
+            for dependency in set(dependencies)
+            if dependency.lower() != "python"
+        )
+
+    def _dependency_list(self, value: object) -> list[str]:
+        if not isinstance(value, list):
+            return []
+
+        dependencies: list[str] = []
+        for item in value:
+            if not isinstance(item, str):
+                continue
+            match = re.match(r"\s*([A-Za-z0-9_.-]+)", item)
+            if match:
+                dependencies.append(match.group(1))
+        return dependencies
 
     def _parse_requirement_line(self, line: str) -> str | None:
         cleaned = line.strip()

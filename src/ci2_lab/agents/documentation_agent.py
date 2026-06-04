@@ -10,6 +10,17 @@ class DocumentationAgent:
         "installation": ("installation", "install", "instalacion", "instalar"),
         "usage": ("usage", "use", "uso", "utilizacion", "usar"),
         "examples": ("examples", "example", "ejemplos", "ejemplo"),
+        "tests": ("tests", "test", "testing", "pruebas", "prueba"),
+        "docker": ("docker",),
+        "architecture": ("architecture", "arquitectura"),
+        "dependencies": (
+            "dependencies",
+            "dependency",
+            "dependencias",
+            "dependencia",
+            "requirements",
+            "requisitos",
+        ),
     }
 
     def __init__(self, scanner: ScannerAgent | None = None) -> None:
@@ -34,7 +45,7 @@ class DocumentationAgent:
         found_sections = self._detect_sections(readme_text)
         missing_sections = [
             section
-            for section in ("installation", "usage", "examples")
+            for section in self.expected_sections
             if section not in found_sections
         ]
 
@@ -44,6 +55,10 @@ class DocumentationAgent:
             "has_installation_section": "installation" in found_sections,
             "has_usage_section": "usage" in found_sections,
             "has_examples_section": "examples" in found_sections,
+            "has_tests_section": "tests" in found_sections,
+            "has_docker_section": "docker" in found_sections,
+            "has_architecture_section": "architecture" in found_sections,
+            "has_dependencies_section": "dependencies" in found_sections,
             "missing_sections": missing_sections,
         }
 

@@ -38,7 +38,7 @@ def main() -> int:
                 print("Repositorio clonado correctamente.")
                 print()
 
-            inventory = AuditorAgent().scan(scan_input)
+            inventory = AuditorAgent(output_dir="outputs").scan(scan_input)
             return 0 if inventory.audit.get("is_valid") else 1
         except GitHubCloneError as error:
             print(f"Error: {error}")
