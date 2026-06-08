@@ -8,7 +8,7 @@ class LanguageAgent:
         files = scan_result.files
         languages: set[str] = set()
 
-        if files.get("python") or files.get("dependencies"):
+        if files.get("python"):
             languages.add("Python")
         if files.get("scripts"):
             languages.add("Bash")
