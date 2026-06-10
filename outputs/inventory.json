@@ -1,27 +1,12 @@
 {
-  "project_name": "fastapi-template",
-  "project_path": "C:\\Users\\carla\\AppData\\Local\\Temp\\ci2-lab-n33bn378\\fastapi-template",
+  "project_name": "Proyecto-Alvaro",
+  "project_path": "C:\\Users\\rpdel\\AppData\\Local\\Temp\\ci2-lab-ah3ec1io\\Proyecto-Alvaro",
   "languages": [
-    "Bash",
-    "Python",
-    "YAML"
+    "Python"
   ],
-  "package_managers": [
-    "Python packaging",
-    "poetry"
-  ],
+  "package_managers": [],
   "dependencies": {
-    "python": [
-      "SQLAlchemy",
-      "alembic",
-      "fastapi",
-      "httpx",
-      "pre-commit",
-      "psycopg2-binary",
-      "pytest",
-      "requests",
-      "uvicorn"
-    ],
+    "python": [],
     "node": {
       "dependencies": [],
       "devDependencies": []
@@ -29,47 +14,23 @@
     "system": []
   },
   "tools": [
-    "Docker",
-    "Docker Compose",
-    "GitHub Actions",
-    "Make",
-    "black",
-    "pytest",
-    "ruff"
+    "GitHub Actions"
   ],
-  "frameworks": [
-    "FastAPI"
-  ],
-  "scripts": [
-    {
-      "path": "Makefile",
-      "type": "makefile",
-      "commands": [
-        "up: docker compose up -d --build api",
-        "utest: $(ci-compose) run --rm unit pytest -m unit .",
-        "itest: $(ci-compose) run --rm integration pytest -m integration .",
-        "check: $(ci-compose) run --rm unit pre-commit run -a",
-        "cleantest: $(ci-compose) kill",
-        "cleantest: $(ci-compose) down --remove-orphans",
-        "cleantest: $(ci-compose) build",
-        "migrate: docker compose run --rm api alembic upgrade head",
-        "downgrade: docker compose run --rm api alembic downgrade -1",
-        "help: @awk -F '##' '/^[a-z_]+:[a-z ]+##/ { print \"\\033[34m\"$$1\"\\033[0m\" \"\\n\" $$2 }' Makefile"
-      ]
-    }
-  ],
+  "frameworks": [],
+  "scripts": [],
   "documentation": {
     "has_readme": true,
-    "has_docs_folder": false,
+    "has_docs_folder": true,
     "has_installation_section": true,
     "has_usage_section": true,
     "has_examples_section": false,
     "has_tests_section": true,
-    "has_docker_section": true,
+    "has_docker_section": false,
     "has_architecture_section": false,
     "has_dependencies_section": true,
     "missing_sections": [
       "examples",
+      "docker",
       "architecture"
     ]
   },
